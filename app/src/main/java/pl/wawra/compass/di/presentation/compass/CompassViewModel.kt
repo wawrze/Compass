@@ -10,16 +10,17 @@ class CompassViewModel : ViewModel() {
     @Inject
     lateinit var locationDao: LocationDao
 
-    private var lastDegree: Float = 0.0F
     val degreeChange = MutableLiveData<Pair<Float, Float>>()
 
-    fun updateDegree(degree: Double? = null) {
+    private var lastDegree: Float = 0.0F
+
+    fun updateDegree(degree: Float? = null) {
         if (degree == null) {
             degreeChange.postValue(Pair(0.0F, lastDegree))
         } else {
-            val calculatedDegree = (Math.toDegrees(degree) + 360).toFloat() % 360
+            val calculatedDegree = (Math.toDegrees(degree.toDouble()) + 360).toFloat() % 360
             degreeChange.postValue(Pair(lastDegree, calculatedDegree))
-            lastDegree = calculatedDegree
+            lastDegree = -calculatedDegree
         }
     }
 
