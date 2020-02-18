@@ -27,17 +27,6 @@ class CompassFragment : Fragment(), SensorEventListener {
     private lateinit var accelerometer: Sensor
     private lateinit var magneticField: Sensor
 
-    private var accelerometerValues: FloatArray? = null
-        get() {
-            if (field == null) field = FloatArray(3)
-            return field
-        }
-    private var magneticFieldValues: FloatArray? = null
-        get() {
-            if (field == null) field = FloatArray(3)
-            return field
-        }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
@@ -99,35 +88,7 @@ class CompassFragment : Fragment(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        event ?: return
-
-        when (event.sensor.type) {
-             TYPE_ACCELEROMETER -> accelerometerValues?.let {
-                it[0] = (it[0] + event.values[0]) / 2
-                it[1] = (it[1] + event.values[1]) / 2
-                it[2] = (it[2] + event.values[2]) / 2
-            }
-            event.sensor.type -> magneticFieldValues?.let {
-                it[0] = (it[0] + event.values[0]) / 2
-                it[1] = (it[1] + event.values[1]) / 2
-                it[2] = (it[2] + event.values[2]) / 2
-            }
-        }
-
-        if (accelerometerValues != null && magneticFieldValues != null) {
-            val rotation = FloatArray(9)
-            val isRotation = SensorManager.getRotationMatrix(
-                rotation,
-                null,
-                accelerometerValues,
-                magneticFieldValues
-            )
-            if (isRotation) {
-                val orientation = FloatArray(3)
-                SensorManager.getOrientation(rotation, orientation)
-                viewModel.updateDegree(orientation[0])
-            }
-        }
+        event?.let { viewModel.handleSensorEvent(it) }
     }
 
 }
