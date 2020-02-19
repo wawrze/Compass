@@ -55,14 +55,13 @@ class CompassFragment : Fragment(), SensorEventListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupObservers()
-        setupClickListeners()
-        getLocations()
     }
 
     override fun onResume() {
         super.onResume()
         sensorManager.registerListener(this, accelerometer, SENSOR_DELAY_NORMAL)
         sensorManager.registerListener(this, magneticField, SENSOR_DELAY_NORMAL)
+        setupTargetMarker()
     }
 
     private fun setupObservers() {
@@ -76,8 +75,34 @@ class CompassFragment : Fragment(), SensorEventListener {
         )
     }
 
-    private fun setupClickListeners() {
-        // TODO: target coordinates dialogs
+    private fun setupTargetMarker() {
+        context?.let {
+            if (
+                ActivityCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                setupTargetMarkerAndButtons(enabled = true)
+                getLocations()
+            } else {
+                setupTargetMarkerAndButtons(enabled = false)
+            }
+        }
+    }
+
+    private fun setupTargetMarkerAndButtons(enabled: Boolean) {
+        if (enabled) {
+            fragment_compass_target_image.visibility = View.VISIBLE
+            // TODO: enable buttons, set onClickListeners
+        } else {
+            fragment_compass_target_image.visibility = View.GONE
+            // TODO: enable buttons, set onClickListeners (no permission toast)
+        }
     }
 
     private fun rotateImage(image: ImageView, rotation: RotationModel) {
@@ -105,23 +130,11 @@ class CompassFragment : Fragment(), SensorEventListener {
     }
 
     private fun getLocations() {
-        val locationRequest = LocationRequest().apply {
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            interval = 5000
-            fastestInterval = 4000
-        }
         context?.let {
-            if (
-                ActivityCompat.checkSelfPermission(
-                    it,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(
-                    it,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                //TODO: ask for permission
+            val locationRequest = LocationRequest().apply {
+                priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+                interval = 5000
+                fastestInterval = 4000
             }
             LocationServices.getFusedLocationProviderClient(it).requestLocationUpdates(
                 locationRequest,
@@ -132,10 +145,12 @@ class CompassFragment : Fragment(), SensorEventListener {
     }
 
     private val locationCallback = object : LocationCallback() {
+
         override fun onLocationResult(lr: LocationResult?) {
             super.onLocationResult(lr)
             lr?.lastLocation?.let { viewModel.updateLocation(it.latitude, it.longitude) }
         }
+
     }
 
 }
