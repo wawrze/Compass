@@ -1,7 +1,7 @@
 package pl.wawra.compass.di.components
 
-import pl.wawra.compass.di.presentation.MainActivity
-import pl.wawra.compass.di.presentation.compass.CompassViewModel
+import pl.wawra.compass.presentation.MainActivity
+import pl.wawra.compass.presentation.compass.CompassViewModel
 
 object Injector {
 

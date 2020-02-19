@@ -1,4 +1,4 @@
-package pl.wawra.compass.di.presentation
+package pl.wawra.compass.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

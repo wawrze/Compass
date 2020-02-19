@@ -1,4 +1,4 @@
-package pl.wawra.compass.di.presentation.compass
+package pl.wawra.compass.presentation.compass
 
 import android.content.Context.SENSOR_SERVICE
 import android.hardware.Sensor
@@ -47,7 +47,6 @@ class CompassFragment : Fragment(), SensorEventListener {
         super.onViewCreated(view, savedInstanceState)
         setupObservers()
         setupClickListeners()
-        viewModel.updateDegree()
     }
 
     override fun onResume() {
@@ -57,27 +56,27 @@ class CompassFragment : Fragment(), SensorEventListener {
     }
 
     private fun setupObservers() {
-        viewModel.degreeChange.observe(
+        viewModel.compassRotation.observe(
             viewLifecycleOwner,
-            Observer { rotateImage(it.first, it.second) }
+            Observer { rotateCompassImage(it) }
         )
     }
 
     private fun setupClickListeners() {
-
+        // TODO
     }
 
-    private fun rotateImage(previousDegree: Float, degree: Float) {
+    private fun rotateCompassImage(rotation: RotationModel) {
         fragment_compass_compass_image.startAnimation(
             RotateAnimation(
-                previousDegree,
-                degree,
+                rotation.fromDegree,
+                rotation.toDegree,
                 RELATIVE_TO_SELF,
                 0.5f,
                 RELATIVE_TO_SELF,
                 0.5f
             ).apply {
-                duration = 2000
+                duration = rotation.animationLength
                 fillAfter = true
             }
         )

@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/fragment_compass"
-        android:name="pl.wawra.compass.di.presentation.compass.CompassFragment"
+        android:name="pl.wawra.compass.presentation.compass.CompassFragment"
         android:label="CompassFragment" />
 
 </navigation>
