@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Location(
-    val lat: Double,
-    val lon: Double,
+    var lat: Double,
+    var lon: Double,
     @PrimaryKey(autoGenerate = true) var id: Long = 0L
 )

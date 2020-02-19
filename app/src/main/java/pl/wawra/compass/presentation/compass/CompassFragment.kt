@@ -68,7 +68,7 @@ class CompassFragment : Fragment(), SensorEventListener {
     }
 
     private fun setupClickListeners() {
-        // TODO
+        // TODO: target coordinates dialogs
     }
 
     private fun rotateImage(image: ImageView, rotation: RotationModel) {

@@ -21,7 +21,7 @@ class CompassViewModel : ViewModel() {
     val targetMarkerRotation = MutableLiveData<RotationModel>()
 
     private var targetLocation = Location(53.129618, 23.163289)
-    private var myLocation = Location(53.134828, 23.163153)
+    var myLocation = Location(53.134828, 23.163153)
 
     private var lastCompassDegree: Float = 0.0F
     private var lastTargetMarkerDegree: Float = 0.0F
