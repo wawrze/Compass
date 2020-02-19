@@ -7,4 +7,9 @@
     <string name="target_latitude">Target latitude</string>
     <string name="target_longitude">Target longitude</string>
     <string name="have_to_grant_permission">You must grant location access permission to use this function!</string>
+    <string name="new_latitude_set">New target latitude set.</string>
+    <string name="new_latitude_error">Unknown error!</string>
+    <string name="new_longitude_set">New target longitude set.</string>
+    <string name="new_longitude_error">Unknown set error!</string>
+    <string name="current_target">Current target:</string>
 </resources>

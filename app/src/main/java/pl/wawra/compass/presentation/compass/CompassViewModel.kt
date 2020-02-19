@@ -4,9 +4,11 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorManager
 import androidx.lifecycle.MutableLiveData
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import pl.wawra.compass.base.BaseViewModel
 import pl.wawra.compass.database.daos.LocationDao
-import pl.wawra.compass.database.entities.Location
+import pl.wawra.compass.models.Location
 import pl.wawra.compass.models.RotationModel
 import javax.inject.Inject
 import kotlin.math.*
@@ -18,8 +20,9 @@ class CompassViewModel : BaseViewModel() {
 
     val compassRotation = MutableLiveData<RotationModel>()
     val targetMarkerRotation = MutableLiveData<RotationModel>()
+    val targetLocationString = MutableLiveData<String>()
 
-    private var targetLocation = Location(53.130014, 23.144562)
+    private var targetLocation: Location? = null
     private val lastLocation = Location(0.0, 0.0)
     private var lastLocationUpdate: Long = 0L
 
@@ -39,70 +42,18 @@ class CompassViewModel : BaseViewModel() {
             return field
         }
 
-    private fun updateRotations(newDegree: Float) {
-        val timestamp = System.currentTimeMillis()
-        if (lastCompassUpdate != 0L && timestamp - lastCompassUpdate < lastAnimationLength) return
-        lastCompassUpdate = timestamp
+    fun updateTargetLocation() {
+        targetLocation ?: targetLocationString.postValue("")
 
-        val calculatedDegree = (-Math.toDegrees(newDegree.toDouble()) + 360).toFloat() % 360
-
-        val change = abs(calculatedDegree - lastCompassDegree)
-        if (change < 2.0) return
-
-        var toDegree = calculatedDegree
-        var fromDegree = lastCompassDegree
-        if (change > 180) {
-            if (lastCompassDegree > calculatedDegree) {
-                toDegree += 360
-            } else {
-                fromDegree += 360
-            }
-        }
-
-        var animationLength = abs(toDegree - fromDegree).toLong() * 10
-        if (animationLength < 100) animationLength = 100
-
-        lastCompassDegree = calculatedDegree
-        lastAnimationLength = animationLength
-        compassRotation.postValue(
-            RotationModel(
-                fromDegree,
-                toDegree,
-                animationLength
-            )
-        )
-
-        val targetDegreeFromNorth = calculateTargetDegree(
-            targetLocation.lat,
-            targetLocation.lon,
-            lastLocation.lat,
-            lastLocation.lon
-        )
-        toDegree = (calculatedDegree + targetDegreeFromNorth) % 360
-        lastTargetMarkerDegree = toDegree % 360
-        targetMarkerRotation.postValue(
-            RotationModel(
-                lastTargetMarkerDegree,
-                toDegree,
-                animationLength
-            )
-        )
-    }
-
-    private fun calculateTargetDegree(
-        targetLat: Double,
-        targetLon: Double,
-        currentLat: Double,
-        currentLon: Double
-    ): Float {
-        val targetY = ((targetLat - currentLat) * 10000000).toLong().toDouble()
-        if (targetY == 0.0) return 0F
-        val targetX = ((targetLon - currentLon) * 10000000).toLong().toDouble()
-
-        var degrees = (radiansToDegrees(atan(targetX / targetY)) + 360) % 360
-        if (targetY < 0) degrees += (if (targetX < 0) 180 else -180)
-
-        return degrees.toFloat()
+        locationDao.getTargetLocation()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe {
+                it?.let {
+                    targetLocation = it
+                    targetLocationString.postValue("${it.lat}, ${it.lon}")
+                } ?: targetLocationString.postValue("")
+            }.addToDisposables()
     }
 
     fun handleSensorEvent(event: SensorEvent) {
@@ -143,6 +94,73 @@ class CompassViewModel : BaseViewModel() {
         lastLocationUpdate = timestamp
         lastLocation.lat = latitude
         lastLocation.lon = longitude
+    }
+
+    private fun updateRotations(newDegree: Float) {
+        val timestamp = System.currentTimeMillis()
+        if (lastCompassUpdate != 0L && timestamp - lastCompassUpdate < lastAnimationLength) return
+        lastCompassUpdate = timestamp
+
+        val calculatedDegree = (-Math.toDegrees(newDegree.toDouble()) + 360).toFloat() % 360
+
+        val change = abs(calculatedDegree - lastCompassDegree)
+        if (change < 2.0) return
+
+        var toDegree = calculatedDegree
+        var fromDegree = lastCompassDegree
+        if (change > 180) {
+            if (lastCompassDegree > calculatedDegree) {
+                toDegree += 360
+            } else {
+                fromDegree += 360
+            }
+        }
+
+        var animationLength = abs(toDegree - fromDegree).toLong() * 10
+        if (animationLength < 100) animationLength = 100
+
+        lastCompassDegree = calculatedDegree
+        lastAnimationLength = animationLength
+        compassRotation.postValue(
+            RotationModel(
+                fromDegree,
+                toDegree,
+                animationLength
+            )
+        )
+
+        targetLocation ?: return
+        val targetDegreeFromNorth = calculateTargetDegree(
+            targetLocation?.lat ?: 0.0,
+            targetLocation?.lon ?: 0.0,
+            lastLocation.lat,
+            lastLocation.lon
+        )
+        toDegree = (calculatedDegree + targetDegreeFromNorth) % 360
+        lastTargetMarkerDegree = toDegree % 360
+        targetMarkerRotation.postValue(
+            RotationModel(
+                lastTargetMarkerDegree,
+                toDegree,
+                animationLength
+            )
+        )
+    }
+
+    private fun calculateTargetDegree(
+        targetLat: Double,
+        targetLon: Double,
+        currentLat: Double,
+        currentLon: Double
+    ): Float {
+        val targetY = ((targetLat - currentLat) * 10000000).toLong().toDouble()
+        if (targetY == 0.0) return 0F
+        val targetX = ((targetLon - currentLon) * 10000000).toLong().toDouble()
+
+        var degrees = (radiansToDegrees(atan(targetX / targetY)) + 360) % 360
+        if (targetY < 0) degrees += (if (targetX < 0) 180 else -180)
+
+        return degrees.toFloat()
     }
 
     private fun calculateDistance(

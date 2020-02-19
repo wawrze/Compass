@@ -6,12 +6,26 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/fragment_compass_current_target"
-        android:layout_width="wrap_content"
+        android:id="@+id/fragment_compass_current_target_label"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="5dp"
+        android:text="@string/current_target"
+        android:textAlignment="textEnd"
+        app:layout_constraintEnd_toStartOf="@id/fragment_compass_current_target"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <!-- TODO: center -->
+    <TextView
+        android:id="@+id/fragment_compass_current_target"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="20dp"
+        android:textAlignment="textStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/fragment_compass_current_target_label"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="53.000000, 26.000000" />
 
@@ -23,7 +37,7 @@
         app:layout_constraintBottom_toTopOf="@id/fragment_compass_latitude_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_compass_current_target_label"
         tools:ignore="ContentDescription" />
 
     <ImageView
@@ -31,13 +45,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:src="@drawable/target_marker"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/fragment_compass_latitude_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"
-        tools:visibility="visible"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintTop_toBottomOf="@id/fragment_compass_current_target_label"
+        tools:ignore="ContentDescription"
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/fragment_compass_latitude_button"

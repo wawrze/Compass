@@ -65,6 +65,7 @@ class CompassFragment : Fragment(), SensorEventListener {
         sensorManager.registerListener(this, accelerometer, SENSOR_DELAY_NORMAL)
         sensorManager.registerListener(this, magneticField, SENSOR_DELAY_NORMAL)
         setupTargetMarker()
+        viewModel.updateTargetLocation()
     }
 
     private fun setupObservers() {
@@ -75,6 +76,19 @@ class CompassFragment : Fragment(), SensorEventListener {
         viewModel.targetMarkerRotation.observe(
             viewLifecycleOwner,
             Observer { rotateImage(fragment_compass_target_image, it) }
+        )
+        viewModel.targetLocationString.observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it.isEmpty()) {
+                    fragment_compass_current_target.visibility = View.GONE
+                    fragment_compass_target_image.visibility = View.GONE
+                } else {
+                    fragment_compass_current_target.text = it
+                    fragment_compass_current_target.visibility = View.VISIBLE
+                    fragment_compass_target_image.visibility = View.VISIBLE
+                }
+            }
         )
     }
 
@@ -102,7 +116,9 @@ class CompassFragment : Fragment(), SensorEventListener {
         if (enabled) {
             fragment_compass_target_image.visibility = View.VISIBLE
             fragment_compass_latitude_button.setOnClickListener {
-                LatitudeDialog.createAndShow(parentFragmentManager)
+                LatitudeDialog.createAndShow(parentFragmentManager) {
+                    viewModel.updateTargetLocation()
+                }
             }
             fragment_compass_longitude_button.setOnClickListener {
                 // TODO: show longitude dialog
