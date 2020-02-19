@@ -6,8 +6,11 @@ import android.hardware.SensorManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import pl.wawra.compass.database.daos.LocationDao
+import pl.wawra.compass.database.entities.Location
 import javax.inject.Inject
 import kotlin.math.abs
+import kotlin.math.acos
+import kotlin.math.sqrt
 
 class CompassViewModel : ViewModel() {
 
@@ -15,8 +18,13 @@ class CompassViewModel : ViewModel() {
     lateinit var locationDao: LocationDao
 
     val compassRotation = MutableLiveData<RotationModel>()
+    val targetMarkerRotation = MutableLiveData<RotationModel>()
+
+    private var targetLocation = Location(53.129618, 23.163289)
+    private var myLocation = Location(53.134828, 23.163153)
 
     private var lastCompassDegree: Float = 0.0F
+    private var lastTargetMarkerDegree: Float = 0.0F
     private var lastCompassUpdate = 0L
     private var lastAnimationLength = 0L
 
@@ -31,7 +39,7 @@ class CompassViewModel : ViewModel() {
             return field
         }
 
-    private fun updateCompassRotation(newDegree: Float) {
+    private fun updateRotations(newDegree: Float) {
         val timestamp = System.currentTimeMillis()
         if (lastCompassUpdate != 0L && timestamp - lastCompassUpdate < lastAnimationLength) return
         lastCompassUpdate = timestamp
@@ -54,10 +62,35 @@ class CompassViewModel : ViewModel() {
         var animationLength = abs(toDegree - fromDegree).toLong() * 10
         if (animationLength < 100) animationLength = 100
 
-        compassRotation.postValue(RotationModel(fromDegree, toDegree, animationLength))
-
         lastCompassDegree = calculatedDegree
         lastAnimationLength = animationLength
+        compassRotation.postValue(RotationModel(fromDegree, toDegree, animationLength))
+
+        val targetDegreeFromNorth = calculateTargetDegree()
+        toDegree = (calculatedDegree + targetDegreeFromNorth) % 360
+        fromDegree = lastTargetMarkerDegree
+        if (change > 180) {
+            if (lastTargetMarkerDegree > calculatedDegree) {
+                toDegree += 360
+            } else {
+                fromDegree += 360
+            }
+        }
+        lastTargetMarkerDegree = toDegree % 360
+        targetMarkerRotation.postValue(RotationModel(fromDegree, toDegree, animationLength))
+    }
+
+    private fun calculateTargetDegree(): Float {
+        val targetX = ((targetLocation.lon - myLocation.lon) * 10000000).toLong().toDouble()
+        val targetY = ((targetLocation.lat - myLocation.lat) * 10000000).toLong().toDouble()
+        val northY = sqrt(targetX * targetX + targetY * targetY)
+
+        val radians = acos(targetY / northY)
+
+        var degrees = radians * 180.0 / Math.PI
+        if (targetLocation.lon < myLocation.lon) degrees = -degrees + 360.0
+
+        return degrees.toFloat()
     }
 
     fun handleSensorEvent(event: SensorEvent) {
@@ -82,7 +115,7 @@ class CompassViewModel : ViewModel() {
             if (isRotation) {
                 val orientation = FloatArray(3)
                 SensorManager.getOrientation(rotation, orientation)
-                updateCompassRotation(orientation[0])
+                updateRotations(orientation[0])
             }
         }
     }

@@ -61,6 +61,10 @@ class CompassFragment : Fragment(), SensorEventListener {
             viewLifecycleOwner,
             Observer { rotateImage(fragment_compass_compass_image, it) }
         )
+        viewModel.targetMarkerRotation.observe(
+            viewLifecycleOwner,
+            Observer { rotateImage(fragment_compass_target_image, it) }
+        )
     }
 
     private fun setupClickListeners() {
