@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Compass</string>
+    <string name="enter_latitude">Enter latitude:</string>
+    <string name="enter_longitude">Enter longitude:</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="target_latitude">Target latitude</string>
+    <string name="target_longitude">Target longitude</string>
+    <string name="have_to_grant_permission">You must grant location access permission to use this function!</string>
 </resources>

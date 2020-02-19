@@ -18,6 +18,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation.RELATIVE_TO_SELF
 import android.view.animation.RotateAnimation
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -28,6 +29,8 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.fragment_compass.*
 import pl.wawra.compass.R
+import pl.wawra.compass.models.RotationModel
+import pl.wawra.compass.presentation.latitudeDialog.LatitudeDialog
 
 class CompassFragment : Fragment(), SensorEventListener {
 
@@ -98,10 +101,28 @@ class CompassFragment : Fragment(), SensorEventListener {
     private fun setupTargetMarkerAndButtons(enabled: Boolean) {
         if (enabled) {
             fragment_compass_target_image.visibility = View.VISIBLE
-            // TODO: enable buttons, set onClickListeners
+            fragment_compass_latitude_button.setOnClickListener {
+                LatitudeDialog.createAndShow(parentFragmentManager)
+            }
+            fragment_compass_longitude_button.setOnClickListener {
+                // TODO: show longitude dialog
+            }
         } else {
             fragment_compass_target_image.visibility = View.GONE
-            // TODO: enable buttons, set onClickListeners (no permission toast)
+            fragment_compass_latitude_button.setOnClickListener {
+                Toast.makeText(
+                    context,
+                    getString(R.string.have_to_grant_permission),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            fragment_compass_longitude_button.setOnClickListener {
+                Toast.makeText(
+                    context,
+                    getString(R.string.have_to_grant_permission),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
     }
 

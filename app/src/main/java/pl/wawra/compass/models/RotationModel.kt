@@ -1,4 +1,4 @@
-package pl.wawra.compass.presentation.compass
+package pl.wawra.compass.models
 
 data class RotationModel(
     val fromDegree: Float,

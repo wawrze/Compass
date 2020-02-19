@@ -4,13 +4,14 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorManager
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import pl.wawra.compass.base.BaseViewModel
 import pl.wawra.compass.database.daos.LocationDao
 import pl.wawra.compass.database.entities.Location
+import pl.wawra.compass.models.RotationModel
 import javax.inject.Inject
 import kotlin.math.*
 
-class CompassViewModel : ViewModel() {
+class CompassViewModel : BaseViewModel() {
 
     @Inject
     lateinit var locationDao: LocationDao
@@ -63,7 +64,13 @@ class CompassViewModel : ViewModel() {
 
         lastCompassDegree = calculatedDegree
         lastAnimationLength = animationLength
-        compassRotation.postValue(RotationModel(fromDegree, toDegree, animationLength))
+        compassRotation.postValue(
+            RotationModel(
+                fromDegree,
+                toDegree,
+                animationLength
+            )
+        )
 
         val targetDegreeFromNorth = calculateTargetDegree(
             targetLocation.lat,
@@ -73,7 +80,13 @@ class CompassViewModel : ViewModel() {
         )
         toDegree = (calculatedDegree + targetDegreeFromNorth) % 360
         lastTargetMarkerDegree = toDegree % 360
-        targetMarkerRotation.postValue(RotationModel(lastTargetMarkerDegree, toDegree, animationLength))
+        targetMarkerRotation.postValue(
+            RotationModel(
+                lastTargetMarkerDegree,
+                toDegree,
+                animationLength
+            )
+        )
     }
 
     private fun calculateTargetDegree(

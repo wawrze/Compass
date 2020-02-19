@@ -5,7 +5,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import pl.wawra.compass.di.components.Injector
 
-class BaseViewModel : ViewModel() {
+abstract class BaseViewModel : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
