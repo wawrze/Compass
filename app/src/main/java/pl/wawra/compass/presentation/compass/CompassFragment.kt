@@ -31,8 +31,10 @@ import kotlinx.android.synthetic.main.fragment_compass.*
 import pl.wawra.compass.R
 import pl.wawra.compass.models.RotationModel
 import pl.wawra.compass.presentation.latitudeDialog.LatitudeDialog
+import pl.wawra.compass.presentation.longitudeDialog.LongitudeDialog
+import pl.wawra.compass.presentation.longitudeDialog.LongitudeDialogCallback
 
-class CompassFragment : Fragment(), SensorEventListener {
+class CompassFragment : Fragment(), SensorEventListener, LongitudeDialogCallback {
 
     private lateinit var viewModel: CompassViewModel
     private lateinit var sensorManager: SensorManager
@@ -121,7 +123,10 @@ class CompassFragment : Fragment(), SensorEventListener {
                 }
             }
             fragment_compass_longitude_button.setOnClickListener {
-                // TODO: show longitude dialog
+                LongitudeDialog.createAndShow(
+                    parentFragmentManager,
+                    this as LongitudeDialogCallback
+                )
             }
         } else {
             fragment_compass_target_image.visibility = View.GONE
@@ -188,6 +193,10 @@ class CompassFragment : Fragment(), SensorEventListener {
             lr?.lastLocation?.let { viewModel.updateLocation(it.latitude, it.longitude) }
         }
 
+    }
+
+    override fun onNewLongitude() {
+        viewModel.updateTargetLocation()
     }
 
 }

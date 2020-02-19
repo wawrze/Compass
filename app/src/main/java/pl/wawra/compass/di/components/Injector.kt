@@ -3,6 +3,7 @@ package pl.wawra.compass.di.components
 import pl.wawra.compass.presentation.MainActivity
 import pl.wawra.compass.presentation.compass.CompassViewModel
 import pl.wawra.compass.presentation.latitudeDialog.LatitudeDialogViewModel
+import pl.wawra.compass.presentation.longitudeDialog.LongitudeDialogViewModel
 
 object Injector {
 
@@ -14,6 +15,7 @@ object Injector {
             is MainActivity -> injector.build().inject(o)
             is CompassViewModel -> injector.build().inject(o)
             is LatitudeDialogViewModel -> injector.build().inject(o)
+            is LongitudeDialogViewModel -> injector.build().inject(o)
         }
     }
 

@@ -87,7 +87,7 @@ class LatitudeDialog(private val callBack: (() -> Unit)?) : BaseDialog() {
                 } else {
                     Toast.makeText(
                         context,
-                        getString(R.string.new_latitude_error),
+                        getString(R.string.unknown_error),
                         Toast.LENGTH_LONG
                     ).show()
                 }
