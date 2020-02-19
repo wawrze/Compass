@@ -58,4 +58,17 @@ class LatitudeDialogViewModel : BaseViewModel() {
         return result
     }
 
+    fun getPreviousLatitudes(): MutableLiveData<List<String>> {
+        val result = MutableLiveData<List<String>>()
+
+        locationDao.getLatitudes()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe {
+                result.postValue(it.map { value -> value.toString() })
+            }.addToDisposables()
+
+        return result
+    }
+
 }

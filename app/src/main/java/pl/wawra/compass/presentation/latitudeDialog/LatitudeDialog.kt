@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
@@ -15,6 +16,7 @@ import pl.wawra.compass.base.BaseDialog
 class LatitudeDialog(private val callBack: (() -> Unit)?) : BaseDialog() {
 
     private lateinit var viewModel: LatitudeDialogViewModel
+    private lateinit var adapter: ArrayAdapter<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,12 +25,32 @@ class LatitudeDialog(private val callBack: (() -> Unit)?) : BaseDialog() {
     ): View? {
         viewModel = ViewModelProvider(this).get(LatitudeDialogViewModel::class.java)
         viewModel.callBack = callBack
+        context?.let {
+            adapter = ArrayAdapter(
+                it,
+                android.R.layout.simple_dropdown_item_1line,
+                ArrayList<String>()
+            )
+        }
         return inflater.inflate(R.layout.dialog_latitude, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupClickListeners()
+        viewModel.getPreviousLatitudes().observe(
+            viewLifecycleOwner,
+            Observer { adapter.addAll(it) }
+        )
+        setupInput()
+    }
+
+    private fun setupInput() {
+        dialog_latitude_input.setAdapter(adapter)
+        dialog_latitude_input.threshold = 1
+        dialog_latitude_input.onFocusChangeListener = View.OnFocusChangeListener { _, b ->
+            if (b) dialog_latitude_input.showDropDown()
+        }
     }
 
     private fun setupClickListeners() {
