@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation.RELATIVE_TO_SELF
 import android.view.animation.RotateAnimation
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -58,7 +59,7 @@ class CompassFragment : Fragment(), SensorEventListener {
     private fun setupObservers() {
         viewModel.compassRotation.observe(
             viewLifecycleOwner,
-            Observer { rotateCompassImage(it) }
+            Observer { rotateImage(fragment_compass_compass_image, it) }
         )
     }
 
@@ -66,8 +67,8 @@ class CompassFragment : Fragment(), SensorEventListener {
         // TODO
     }
 
-    private fun rotateCompassImage(rotation: RotationModel) {
-        fragment_compass_compass_image.startAnimation(
+    private fun rotateImage(image: ImageView, rotation: RotationModel) {
+        image.startAnimation(
             RotateAnimation(
                 rotation.fromDegree,
                 rotation.toDegree,
