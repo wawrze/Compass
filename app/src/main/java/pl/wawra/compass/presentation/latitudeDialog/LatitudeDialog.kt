@@ -35,27 +35,42 @@ class LatitudeDialog(private val callBack: (() -> Unit)?) : BaseDialog() {
         dialog_latitude_cancel_button.setOnClickListener { dismissAllowingStateLoss() }
         dialog_latitude_confirm_button.setOnClickListener {
             val latitude = dialog_latitude_input.text.toString()
-            viewModel.insertNewLatitude(latitude).observe(
+            viewModel.verifyLatitude(latitude).observe(
                 viewLifecycleOwner,
                 Observer {
-                    if (it) {
-                        Toast.makeText(
-                            context,
-                            getString(R.string.new_latitude_set),
-                            Toast.LENGTH_LONG
-                        ).show()
-                        viewModel.callBack?.invoke()
-                        dismissAllowingStateLoss()
+                    if (it == 0) {
+                        dialog_latitude_input_error_message.visibility = View.GONE
+                        onCorrectLatitude(latitude)
                     } else {
-                        Toast.makeText(
-                            context,
-                            getString(R.string.new_latitude_error),
-                            Toast.LENGTH_LONG
-                        ).show()
+                        dialog_latitude_input_error_message.text = getString(it)
+                        dialog_latitude_input_error_message.visibility = View.VISIBLE
                     }
                 }
             )
         }
+    }
+
+    private fun onCorrectLatitude(latitude: String) {
+        viewModel.insertNewLatitude(latitude).observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it) {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.new_latitude_set),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    viewModel.callBack?.invoke()
+                    dismissAllowingStateLoss()
+                } else {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.new_latitude_error),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        )
     }
 
     companion object {

@@ -12,4 +12,10 @@
     <string name="new_longitude_set">New target longitude set.</string>
     <string name="new_longitude_error">Unknown set error!</string>
     <string name="current_target">Current target:</string>
+    <string name="latitude_to_small">Latitude must be greater than -90!</string>
+    <string name="latitude_to_big">Latitude must be lesser than 90!</string>
+    <string name="incorrect_latitude">Incorrect latitude format!</string>
+    <string name="longitude_to_small">Longitude must be greater than -180!</string>
+    <string name="longitude_to_big">Longitude must be lesser than 180!</string>
+    <string name="incorrect_longitude">Incorrect longitude format!</string>
 </resources>
