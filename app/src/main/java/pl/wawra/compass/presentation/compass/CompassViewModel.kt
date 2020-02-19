@@ -8,9 +8,7 @@ import androidx.lifecycle.ViewModel
 import pl.wawra.compass.database.daos.LocationDao
 import pl.wawra.compass.database.entities.Location
 import javax.inject.Inject
-import kotlin.math.abs
-import kotlin.math.acos
-import kotlin.math.sqrt
+import kotlin.math.*
 
 class CompassViewModel : ViewModel() {
 
@@ -20,13 +18,14 @@ class CompassViewModel : ViewModel() {
     val compassRotation = MutableLiveData<RotationModel>()
     val targetMarkerRotation = MutableLiveData<RotationModel>()
 
-    private var targetLocation = Location(53.129618, 23.163289)
-    var myLocation = Location(53.134828, 23.163153)
+    private var targetLocation = Location(53.130014, 23.144562)
+    private val lastLocation = Location(0.0, 0.0)
+    private var lastLocationUpdate: Long = 0L
 
     private var lastCompassDegree: Float = 0.0F
     private var lastTargetMarkerDegree: Float = 0.0F
-    private var lastCompassUpdate = 0L
-    private var lastAnimationLength = 0L
+    private var lastCompassUpdate: Long = 0L
+    private var lastAnimationLength: Long = 0L
 
     private var accelerometerValues: FloatArray? = null
         get() {
@@ -66,29 +65,29 @@ class CompassViewModel : ViewModel() {
         lastAnimationLength = animationLength
         compassRotation.postValue(RotationModel(fromDegree, toDegree, animationLength))
 
-        val targetDegreeFromNorth = calculateTargetDegree()
+        val targetDegreeFromNorth = calculateTargetDegree(
+            targetLocation.lat,
+            targetLocation.lon,
+            lastLocation.lat,
+            lastLocation.lon
+        )
         toDegree = (calculatedDegree + targetDegreeFromNorth) % 360
-        fromDegree = lastTargetMarkerDegree
-        if (change > 180) {
-            if (lastTargetMarkerDegree > calculatedDegree) {
-                toDegree += 360
-            } else {
-                fromDegree += 360
-            }
-        }
         lastTargetMarkerDegree = toDegree % 360
-        targetMarkerRotation.postValue(RotationModel(fromDegree, toDegree, animationLength))
+        targetMarkerRotation.postValue(RotationModel(lastTargetMarkerDegree, toDegree, animationLength))
     }
 
-    private fun calculateTargetDegree(): Float {
-        val targetX = ((targetLocation.lon - myLocation.lon) * 10000000).toLong().toDouble()
-        val targetY = ((targetLocation.lat - myLocation.lat) * 10000000).toLong().toDouble()
-        val northY = sqrt(targetX * targetX + targetY * targetY)
+    private fun calculateTargetDegree(
+        targetLat: Double,
+        targetLon: Double,
+        currentLat: Double,
+        currentLon: Double
+    ): Float {
+        val targetY = ((targetLat - currentLat) * 10000000).toLong().toDouble()
+        if (targetY == 0.0) return 0F
+        val targetX = ((targetLon - currentLon) * 10000000).toLong().toDouble()
 
-        val radians = acos(targetY / northY)
-
-        var degrees = radians * 180.0 / Math.PI
-        if (targetLocation.lon < myLocation.lon) degrees = -degrees + 360.0
+        var degrees = (radiansToDegrees(atan(targetX / targetY)) + 360) % 360
+        if (targetY < 0) degrees += (if (targetX < 0) 180 else -180)
 
         return degrees.toFloat()
     }
@@ -118,6 +117,41 @@ class CompassViewModel : ViewModel() {
                 updateRotations(orientation[0])
             }
         }
+    }
+
+    fun updateLocation(latitude: Double, longitude: Double) {
+        val timestamp = System.currentTimeMillis()
+        if (lastLocationUpdate != 0L && timestamp - lastLocationUpdate < 5000) return
+
+        val distanceFromLastLocation =
+            calculateDistance(latitude, longitude, lastLocation.lat, lastLocation.lon)
+        if (distanceFromLastLocation < 5) return
+
+        lastLocationUpdate = timestamp
+        lastLocation.lat = latitude
+        lastLocation.lon = longitude
+    }
+
+    private fun calculateDistance(
+        lat1: Double,
+        lon1: Double,
+        lat2: Double,
+        lon2: Double
+    ): Int {
+        val theta = lon1 - lon2
+        var distance = sin(degreesToRadians(lat1)) * sin(degreesToRadians(lat2)) + cos(degreesToRadians(lat1)) * cos(degreesToRadians(lat2)) * cos(degreesToRadians(theta))
+        distance = acos(distance)
+        distance = radiansToDegrees(distance)
+        distance *= 0.1112
+        return distance.toInt()
+    }
+
+    private fun degreesToRadians(deg: Double): Double {
+        return deg * Math.PI / 180.0
+    }
+
+    private fun radiansToDegrees(rad: Double): Double {
+        return rad * 180.0 / Math.PI
     }
 
 }

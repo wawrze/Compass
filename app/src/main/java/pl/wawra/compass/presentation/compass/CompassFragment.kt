@@ -1,6 +1,8 @@
 package pl.wawra.compass.presentation.compass
 
+import android.Manifest
 import android.content.Context.SENSOR_SERVICE
+import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.Sensor.TYPE_ACCELEROMETER
 import android.hardware.Sensor.TYPE_MAGNETIC_FIELD
@@ -9,15 +11,21 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.hardware.SensorManager.SENSOR_DELAY_NORMAL
 import android.os.Bundle
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation.RELATIVE_TO_SELF
 import android.view.animation.RotateAnimation
 import android.widget.ImageView
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.fragment_compass.*
 import pl.wawra.compass.R
 
@@ -48,6 +56,7 @@ class CompassFragment : Fragment(), SensorEventListener {
         super.onViewCreated(view, savedInstanceState)
         setupObservers()
         setupClickListeners()
+        getLocations()
     }
 
     override fun onResume() {
@@ -93,6 +102,40 @@ class CompassFragment : Fragment(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent?) {
         event?.let { viewModel.handleSensorEvent(it) }
+    }
+
+    private fun getLocations() {
+        val locationRequest = LocationRequest().apply {
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            interval = 5000
+            fastestInterval = 4000
+        }
+        context?.let {
+            if (
+                ActivityCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                //TODO: ask for permission
+            }
+            LocationServices.getFusedLocationProviderClient(it).requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+            )
+        }
+    }
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(lr: LocationResult?) {
+            super.onLocationResult(lr)
+            lr?.lastLocation?.let { viewModel.updateLocation(it.latitude, it.longitude) }
+        }
     }
 
 }
