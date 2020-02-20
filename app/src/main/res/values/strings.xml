@@ -10,7 +10,7 @@
     <string name="new_latitude_set">New target latitude set.</string>
     <string name="unknown_error">Unknown error!</string>
     <string name="new_longitude_set">New target longitude set.</string>
-    <string name="current_target">Current target:</string>
+    <string name="current_target">Current target: %s</string>
     <string name="latitude_to_small">Latitude must be greater than -90!</string>
     <string name="latitude_to_big">Latitude must be lesser than 90!</string>
     <string name="incorrect_latitude">Incorrect latitude format!</string>

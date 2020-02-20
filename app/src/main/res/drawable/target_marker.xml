@@ -7,15 +7,15 @@
     tools:ignore="VectorRaster">
 
     <path
-        android:fillColor="@android:color/holo_red_dark"
+        android:fillColor="@color/orange"
         android:pathData="m463.803, 121.851 L 463.803,151.851 483.803,151.851 z"
         android:strokeWidth="1"
-        android:strokeColor="@android:color/holo_red_dark" />
+        android:strokeColor="@color/orange" />
 
     <path
-        android:fillColor="@android:color/holo_red_dark"
+        android:fillColor="@color/orange"
         android:pathData="m463.803, 121.851 L 463.803,151.851 443.803,151.851 z"
         android:strokeWidth="1"
-        android:strokeColor="@android:color/holo_red_dark" />
+        android:strokeColor="@color/orange" />
 
 </vector>

@@ -19,14 +19,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import pl.wawra.compass.R;
 import pl.wawra.compass.base.BaseDialog;
 
 public class LongitudeDialog extends BaseDialog {
 
+    private final LongitudeDialogCallback callback;
     private LongitudeDialogViewModel viewModel;
-    private LongitudeDialogCallback callback;
     private ArrayAdapter<String> adapter;
 
     private TextView inputError;
@@ -53,7 +54,7 @@ public class LongitudeDialog extends BaseDialog {
         if (context != null) {
             adapter = new ArrayAdapter<>(
                     getContext(),
-                    android.R.layout.simple_dropdown_item_1line,
+                    android.R.layout.simple_dropdown_item_1line,    // TODO: custom item layout
                     new ArrayList<String>()
             );
         }
@@ -78,19 +79,10 @@ public class LongitudeDialog extends BaseDialog {
     }
 
     private void bindViewElements() {
-        try {
-            inputError = getView().findViewById(R.id.dialog_longitude_input_error_message);
-            cancelButton = getView().findViewById(R.id.dialog_longitude_cancel_button);
-            confirmButton = getView().findViewById(R.id.dialog_longitude_confirm_button);
-            input = getView().findViewById(R.id.dialog_longitude_input);
-        } catch (NullPointerException exception) {
-            Toast.makeText(
-                    getContext(),
-                    getString(R.string.unknown_error),
-                    Toast.LENGTH_LONG
-            ).show();
-            dismissAllowingStateLoss();
-        }
+        inputError = Objects.requireNonNull(getView()).findViewById(R.id.dialog_longitude_input_error_message);
+        cancelButton = getView().findViewById(R.id.dialog_longitude_cancel_button);
+        confirmButton = getView().findViewById(R.id.dialog_longitude_confirm_button);
+        input = getView().findViewById(R.id.dialog_longitude_input);
     }
 
     private void setupInput() {

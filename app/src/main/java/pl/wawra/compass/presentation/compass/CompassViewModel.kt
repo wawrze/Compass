@@ -58,10 +58,11 @@ class CompassViewModel : BaseViewModel() {
 
     fun handleSensorEvent(event: SensorEvent) {
         when (event.sensor.type) {
-            Sensor.TYPE_ACCELEROMETER -> accelerometerValues?.let {
+            Sensor.TYPE_MAGNETIC_FIELD -> magneticFieldValues?.let {
+                if (accelerometerValues == null) return
                 for (i: Int in 0..2) it[i] = (it[i] + event.values[i]) / 2
             }
-            Sensor.TYPE_MAGNETIC_FIELD -> magneticFieldValues?.let {
+            Sensor.TYPE_ACCELEROMETER -> accelerometerValues?.let {
                 for (i: Int in 0..2) it[i] = (it[i] + event.values[i]) / 2
             }
             else -> return
@@ -79,6 +80,8 @@ class CompassViewModel : BaseViewModel() {
                 val orientation = FloatArray(3)
                 SensorManager.getOrientation(rotation, orientation)
                 updateRotations(orientation[0])
+                accelerometerValues = null
+                magneticFieldValues = null
             }
         }
     }

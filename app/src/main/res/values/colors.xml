@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">@color/light_blue</color>
+    <color name="colorPrimaryDark">@color/dark_blue</color>
+    <color name="colorAccent">@color/orange</color>
+
+    <color name="light_grey">#C2CFDF</color>
+    <color name="dark_grey">#353E4F</color>
+    <color name="light_blue">#0135AF</color>
+    <color name="dark_blue">#121D5F</color>
+    <color name="red">#AD2019</color>
+    <color name="orange">#C96718</color>
 </resources>

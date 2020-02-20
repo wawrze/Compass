@@ -28,7 +28,7 @@ class LatitudeDialog(private val callBack: (() -> Unit)?) : BaseDialog() {
         context?.let {
             adapter = ArrayAdapter(
                 it,
-                android.R.layout.simple_dropdown_item_1line,
+                android.R.layout.simple_dropdown_item_1line,    // TODO: custom item layout
                 ArrayList<String>()
             )
         }
