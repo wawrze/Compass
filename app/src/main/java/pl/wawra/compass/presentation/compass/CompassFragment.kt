@@ -116,6 +116,8 @@ class CompassFragment : Fragment(), SensorEventListener, LongitudeDialogCallback
 
     private fun setupTargetMarkerAndButtons(enabled: Boolean) {
         if (enabled) {
+            fragment_compass_current_target_label.visibility = View.VISIBLE
+            fragment_compass_current_target.visibility = View.VISIBLE
             fragment_compass_target_image.visibility = View.VISIBLE
             fragment_compass_latitude_button.setOnClickListener {
                 LatitudeDialog.createAndShow(parentFragmentManager) {
@@ -129,6 +131,8 @@ class CompassFragment : Fragment(), SensorEventListener, LongitudeDialogCallback
                 )
             }
         } else {
+            fragment_compass_current_target_label.visibility = View.GONE
+            fragment_compass_current_target.visibility = View.GONE
             fragment_compass_target_image.visibility = View.GONE
             fragment_compass_latitude_button.setOnClickListener {
                 Toast.makeText(

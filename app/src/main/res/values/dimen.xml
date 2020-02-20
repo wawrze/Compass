@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="base_dialog_margin">50dp</dimen>
+    <dimen name="dialog_corner_radius">5dp</dimen>
+
+    <dimen name="margin_tiny">5dp</dimen>
+    <dimen name="margin_small">10dp</dimen>
+    <dimen name="margin_regular">20dp</dimen>
+    <dimen name="margin_large">30dp</dimen>
 </resources>
