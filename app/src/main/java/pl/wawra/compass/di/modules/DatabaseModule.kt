@@ -14,15 +14,14 @@ class DatabaseModule(private val context: Context) {
         private const val DB_NAME = "compass.db"
     }
 
-    private lateinit var dataBase: Database
+    private lateinit var database: Database
 
     @Provides
-    fun provideDataBase(): Database {
-        if (!::dataBase.isInitialized) {
-            dataBase = Room.databaseBuilder(context, Database::class.java, DB_NAME)
-                .build()
-        }
-        return dataBase
+    fun provideDataBase(): Database = if (!::database.isInitialized) {
+        database = Room.databaseBuilder(context, Database::class.java, DB_NAME).build()
+        database
+    } else {
+        database
     }
 
     @Provides

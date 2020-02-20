@@ -9,15 +9,14 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
+import pl.wawra.compass.App
 import pl.wawra.compass.R
-import pl.wawra.compass.di.components.Injector
-import pl.wawra.compass.di.modules.DatabaseModule
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Injector.injector.databaseModule(DatabaseModule(this))
+        (application as App).appComponent?.inject(this)
         setContentView(R.layout.activity_main)
 
         checkPermission()

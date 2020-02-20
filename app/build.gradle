@@ -35,8 +35,8 @@ dependencies {
 
     // dagger
     implementation 'com.google.dagger:dagger:2.24'
-    kapt 'com.google.dagger:dagger-compiler:2.16'
     implementation 'javax.inject:javax.inject:1'
+    kapt 'com.google.dagger:dagger-compiler:2.22.1'
 
     // view model
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
@@ -44,8 +44,8 @@ dependencies {
 
     // room
     implementation 'androidx.room:room-runtime:2.2.3'
-    kapt 'androidx.room:room-compiler:2.2.3'
     implementation 'androidx.room:room-rxjava2:2.2.3'
+    kapt 'androidx.room:room-compiler:2.2.3'
 
     // rx
     implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
@@ -60,6 +60,9 @@ dependencies {
 
     // test
     testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation 'androidx.test:core:1.2.0'
+    testImplementation 'androidx.test:runner:1.2.0'
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+    testImplementation 'org.mockito:mockito-core:2.23.0'
+    kaptTest 'com.google.dagger:dagger-compiler:2.22.1'
 }
