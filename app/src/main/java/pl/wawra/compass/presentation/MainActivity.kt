@@ -12,7 +12,7 @@ import com.google.android.gms.location.LocationServices
 import pl.wawra.compass.App
 import pl.wawra.compass.R
 
-class MainActivity : AppCompatActivity() { // TODO: check sensors availability
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

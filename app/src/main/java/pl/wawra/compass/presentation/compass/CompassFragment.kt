@@ -33,6 +33,7 @@ import pl.wawra.compass.models.RotationModel
 import pl.wawra.compass.presentation.latitudeDialog.LatitudeDialog
 import pl.wawra.compass.presentation.longitudeDialog.LongitudeDialog
 import pl.wawra.compass.presentation.longitudeDialog.LongitudeDialogCallback
+import pl.wawra.compass.presentation.noSensorsDialog.NoSensorsDialog
 
 class CompassFragment : Fragment(), SensorEventListener, LongitudeDialogCallback {
 
@@ -43,9 +44,7 @@ class CompassFragment : Fragment(), SensorEventListener, LongitudeDialogCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
-        accelerometer = sensorManager.getDefaultSensor(TYPE_ACCELEROMETER)
-        magneticField = sensorManager.getDefaultSensor(TYPE_MAGNETIC_FIELD)
+        setupSensors()
     }
 
     override fun onCreateView(
@@ -68,6 +67,15 @@ class CompassFragment : Fragment(), SensorEventListener, LongitudeDialogCallback
         sensorManager.registerListener(this, magneticField, SENSOR_DELAY_NORMAL)
         setupTargetMarker()
         viewModel.updateTargetLocation()
+    }
+
+    private fun setupSensors() {
+        sensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
+        accelerometer = sensorManager.getDefaultSensor(TYPE_ACCELEROMETER)
+        magneticField = sensorManager.getDefaultSensor(TYPE_MAGNETIC_FIELD)
+        if (!::accelerometer.isInitialized || !::magneticField.isInitialized) {
+            NoSensorsDialog.createAndShow(parentFragmentManager)
+        }
     }
 
     private fun setupObservers() {
