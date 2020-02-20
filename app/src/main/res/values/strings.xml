@@ -4,17 +4,17 @@
     <string name="enter_longitude">Enter longitude:</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
-    <string name="target_latitude">Target latitude</string>
-    <string name="target_longitude">Target longitude</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
     <string name="have_to_grant_permission">You must grant location access permission to use this function!</string>
     <string name="new_latitude_set">New target latitude set.</string>
     <string name="unknown_error">Unknown error!</string>
     <string name="new_longitude_set">New target longitude set.</string>
-    <string name="current_target">Current target: %s</string>
+    <string name="current_target">Current target: </string>
     <string name="latitude_to_small">Latitude must be greater than -90!</string>
     <string name="latitude_to_big">Latitude must be lesser than 90!</string>
     <string name="incorrect_latitude">Incorrect latitude format!</string>
     <string name="longitude_to_small">Longitude must be greater than -180!</string>
     <string name="longitude_to_big">Longitude must be lesser than 180!</string>
     <string name="incorrect_longitude">Incorrect longitude format!</string>
-</resources>
+</resources><!--TODO: pl strings-->

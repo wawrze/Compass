@@ -6,6 +6,7 @@ import pl.wawra.compass.base.BaseViewModel
 import pl.wawra.compass.di.components.ApplicationComponent
 import pl.wawra.compass.di.components.DaggerApplicationComponent
 import pl.wawra.compass.di.modules.DatabaseModule
+import pl.wawra.compass.di.modules.GeocoderModule
 
 open class App : Application() {
 
@@ -15,6 +16,7 @@ open class App : Application() {
         super.onCreate()
         appComponent = DaggerApplicationComponent.builder()
             .databaseModule(DatabaseModule(this))
+            .geocoderModule(GeocoderModule(this))
             .build()
         appComponent?.inject(this)
         BaseViewModel.setAppComponent(appComponent)

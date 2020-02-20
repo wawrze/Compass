@@ -3,6 +3,7 @@ package pl.wawra.compass.presentation.compass
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorManager
+import android.location.Geocoder
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -13,10 +14,14 @@ import pl.wawra.compass.models.RotationModel
 import javax.inject.Inject
 import kotlin.math.*
 
+
 class CompassViewModel : BaseViewModel() {
 
     @Inject
     lateinit var locationDao: LocationDao
+
+    @Inject
+    lateinit var geocoder: Geocoder
 
     val compassRotation = MutableLiveData<RotationModel>()
     val targetMarkerRotation = MutableLiveData<RotationModel>()
@@ -51,7 +56,14 @@ class CompassViewModel : BaseViewModel() {
             .subscribe {
                 it?.let {
                     targetLocation = it
-                    targetLocationString.postValue("${it.lat}, ${it.lon}")
+                    val addresses =
+                        geocoder.getFromLocation(it.lat, it.lon, 1) // TODO: move to back thread
+                    val address = if (addresses.isNotEmpty()) {
+                        addresses[0].getAddressLine(0)
+                    } else {
+                        ""
+                    }
+                    targetLocationString.postValue("${it.lat}, ${it.lon}\n$address")
                 } ?: targetLocationString.postValue("")
             }.addToDisposables()
     }
@@ -107,7 +119,7 @@ class CompassViewModel : BaseViewModel() {
         val calculatedDegree = (-Math.toDegrees(newDegree.toDouble()) + 360).toFloat() % 360
 
         val change = abs(calculatedDegree - lastCompassDegree)
-        if (change < 2.0) return
+        if (change < 10.0) return
 
         var toDegree = calculatedDegree
         var fromDegree = lastCompassDegree

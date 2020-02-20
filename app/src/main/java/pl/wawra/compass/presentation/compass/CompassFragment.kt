@@ -83,12 +83,11 @@ class CompassFragment : Fragment(), SensorEventListener, LongitudeDialogCallback
             viewLifecycleOwner,
             Observer {
                 if (it.isEmpty()) {
-                    fragment_compass_current_target.visibility = View.GONE
+                    fragment_compass_current_target_container.visibility = View.GONE
                     fragment_compass_target_image.visibility = View.GONE
                 } else {
-                    fragment_compass_current_target.text = getString(R.string.current_target, it)
-                    fragment_compass_current_target.visibility = View.VISIBLE
-                    fragment_compass_target_image.visibility = View.VISIBLE
+                    fragment_compass_current_target.text = it
+                    setupTargetMarker()
                 }
             }
         )
@@ -116,7 +115,7 @@ class CompassFragment : Fragment(), SensorEventListener, LongitudeDialogCallback
 
     private fun setupTargetMarkerAndButtons(enabled: Boolean) {
         if (enabled) {
-            fragment_compass_current_target.visibility = View.VISIBLE
+            fragment_compass_current_target_container.visibility = View.VISIBLE
             fragment_compass_target_image.visibility = View.VISIBLE
             fragment_compass_latitude_button.setOnClickListener {
                 LatitudeDialog.createAndShow(parentFragmentManager) {
@@ -130,7 +129,7 @@ class CompassFragment : Fragment(), SensorEventListener, LongitudeDialogCallback
                 )
             }
         } else {
-            fragment_compass_current_target.visibility = View.GONE
+            fragment_compass_current_target_container.visibility = View.GONE
             fragment_compass_target_image.visibility = View.GONE
             fragment_compass_latitude_button.setOnClickListener {
                 Toast.makeText(
