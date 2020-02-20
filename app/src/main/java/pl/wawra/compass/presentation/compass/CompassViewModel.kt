@@ -110,20 +110,27 @@ class CompassViewModel : BaseViewModel() {
         Observable.fromCallable { geocoder.getFromLocation(lat, lon, 1) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe {
-                if (it.isNotEmpty()) {
-                    val address = it[0]
-                    val lines = address.maxAddressLineIndex
-                    val addressStringBuilder = StringBuilder(address.getAddressLine(0))
-                    if (lines > 1) {
-                        for (i: Int in 1..lines) {
-                            addressStringBuilder.append("\n")
-                            addressStringBuilder.append(address.getAddressLine(i))
+            .subscribe(
+                {
+                    if (it.isNotEmpty()) {
+                        val address = it[0]
+                        val lines = address.maxAddressLineIndex
+                        val addressStringBuilder = StringBuilder(address.getAddressLine(0))
+                        if (lines > 1) {
+                            for (i: Int in 1..lines) {
+                                addressStringBuilder.append("\n")
+                                addressStringBuilder.append(address.getAddressLine(i))
+                            }
                         }
+                        targetAddressString.postValue(addressStringBuilder.toString())
+                    } else {
+                        targetAddressString.postValue("")
                     }
-                    targetAddressString.postValue(addressStringBuilder.toString())
+                },
+                {
+                    println()
                 }
-            }.addToDisposables()
+            ).addToDisposables()
     }
 
     private fun updateRotations(newDegree: Float) {

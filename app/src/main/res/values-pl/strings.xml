@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kompas</string>
+    <string name="enter_latitude">Podaj szerokość geograficzną:</string>
+    <string name="enter_longitude">Podaj długość geograficzną:</string>
+    <string name="cancel">Anuluj</string>
+    <string name="confirm">Zatwierdź</string>
+    <string name="latitude">Szerokość</string>
+    <string name="longitude">Długość</string>
+    <string name="have_to_grant_permission">Aby korzystać z tej funkcji musisz zezwolnić na dostęp do lokalizacji!</string>
+    <string name="new_latitude_set">Nowa szerokość geograficzna celu została ustawiona.</string>
+    <string name="unknown_error">Wystąpił nieznany błąd!</string>
+    <string name="new_longitude_set">Nowa długość geograficzna celu została ustawiona.</string>
+    <string name="current_target">Ustawiony cel: </string>
+    <string name="latitude_to_small">Szerokość musi być większa niż -90!</string>
+    <string name="latitude_to_big">Szerokość musi być mniejsza niż 90!</string>
+    <string name="incorrect_latitude">Nieprawidłowy format szerokości geograficznej!</string>
+    <string name="longitude_to_small">Szerokość musi być większa niż -180!</string>
+    <string name="longitude_to_big">Szerokość musi być mniejsza niż 180!</string>
+    <string name="incorrect_longitude">Nieprawidłowy długości szerokości geograficznej!</string>
+    <string name="no_sensors">Urządzenie nie wspiera obsługi czujników wymaganych przez aplikację. Aplikacja nie może zostać uruchomiona.</string>
+    <string name="close_app">Zamknij aplikację</string>
+</resources>

@@ -19,4 +19,4 @@
     <string name="incorrect_longitude">Incorrect longitude format!</string>
     <string name="no_sensors">The device does not support the sensors required by the application. The application cannot be started.</string>
     <string name="close_app">Close application</string>
-</resources><!--TODO: pl strings-->
+</resources>

@@ -65,8 +65,8 @@ class CompassFragment : Fragment(), SensorEventListener, LongitudeDialogCallback
         super.onResume()
         sensorManager.registerListener(this, accelerometer, SENSOR_DELAY_NORMAL)
         sensorManager.registerListener(this, magneticField, SENSOR_DELAY_NORMAL)
-        setupTargetMarker()
         viewModel.updateTargetLocation()
+        setupTargetMarker()
     }
 
     private fun setupSensors() {

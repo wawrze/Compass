@@ -3,8 +3,9 @@
     <dimen name="base_dialog_margin">50dp</dimen>
     <dimen name="dialog_corner_radius">5dp</dimen>
     <dimen name="button_corner_radius">2dp</dimen>
-    <dimen name="button_height">30dp</dimen>
+    <dimen name="button_height">40dp</dimen>
 
+    <dimen name="margin_small">10dp</dimen>
     <dimen name="margin_regular">10dp</dimen>
     <dimen name="margin_large">20dp</dimen>
 </resources>
