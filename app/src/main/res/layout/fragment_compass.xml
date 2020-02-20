@@ -10,9 +10,11 @@
         android:id="@+id/fragment_compass_current_target_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_regular"
-        android:layout_marginTop="@dimen/margin_regular"
-        android:layout_marginEnd="@dimen/margin_regular"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:visibility="invisible"
+        tools:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -33,34 +35,50 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:textColor="@color/orange"
+            android:singleLine="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/fragment_compass_current_target_label"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="53.000000, 26.000000 \nAddress, zip code, City, etc." />
+            tools:text="53.000000, 26.000000" />
+
+        <TextView
+            android:id="@+id/fragment_compass_current_target_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minLines="2"
+            android:textColor="@color/orange"
+            app:layout_constraintEnd_toEndOf="@id/fragment_compass_current_target"
+            app:layout_constraintStart_toStartOf="@id/fragment_compass_current_target"
+            app:layout_constraintTop_toBottomOf="@id/fragment_compass_current_target"
+            tools:text="Address, zip code, City, etc." />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/fragment_compass_compass_image"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:src="@drawable/wind_rose"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_large"
         app:layout_constraintBottom_toTopOf="@id/fragment_compass_latitude_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_compass_current_target_container"
         tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/fragment_compass_target_image"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:src="@drawable/target_marker"
         android:visibility="gone"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_large"
         app:layout_constraintBottom_toTopOf="@id/fragment_compass_latitude_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_compass_current_target_container"
         tools:ignore="ContentDescription"
         tools:visibility="visible" />
 

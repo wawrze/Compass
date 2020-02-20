@@ -5,6 +5,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorManager
 import android.location.Geocoder
 import androidx.lifecycle.MutableLiveData
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import pl.wawra.compass.base.BaseViewModel
@@ -19,13 +20,13 @@ class CompassViewModel : BaseViewModel() {
 
     @Inject
     lateinit var locationDao: LocationDao
-
     @Inject
     lateinit var geocoder: Geocoder
 
     val compassRotation = MutableLiveData<RotationModel>()
     val targetMarkerRotation = MutableLiveData<RotationModel>()
     val targetLocationString = MutableLiveData<String>()
+    val targetAddressString = MutableLiveData<String>()
 
     private var targetLocation: Location? = null
     private val lastLocation = Location(0.0, 0.0)
@@ -56,14 +57,8 @@ class CompassViewModel : BaseViewModel() {
             .subscribe {
                 it?.let {
                     targetLocation = it
-                    val addresses =
-                        geocoder.getFromLocation(it.lat, it.lon, 1) // TODO: move to back thread
-                    val address = if (addresses.isNotEmpty()) {
-                        addresses[0].getAddressLine(0)
-                    } else {
-                        ""
-                    }
-                    targetLocationString.postValue("${it.lat}, ${it.lon}\n$address")
+                    targetLocationString.postValue("${it.lat}, ${it.lon}")
+                    updateTargetAddress(it.lat, it.lon)
                 } ?: targetLocationString.postValue("")
             }.addToDisposables()
     }
@@ -109,6 +104,26 @@ class CompassViewModel : BaseViewModel() {
         lastLocationUpdate = timestamp
         lastLocation.lat = latitude
         lastLocation.lon = longitude
+    }
+
+    private fun updateTargetAddress(lat: Double, lon: Double) {
+        Observable.fromCallable { geocoder.getFromLocation(lat, lon, 1) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe {
+                if (it.isNotEmpty()) {
+                    val address = it[0]
+                    val lines = address.maxAddressLineIndex
+                    val addressStringBuilder = StringBuilder(address.getAddressLine(0))
+                    if (lines > 1) {
+                        for (i: Int in 1..lines) {
+                            addressStringBuilder.append("\n")
+                            addressStringBuilder.append(address.getAddressLine(i))
+                        }
+                    }
+                    targetAddressString.postValue(addressStringBuilder.toString())
+                }
+            }.addToDisposables()
     }
 
     private fun updateRotations(newDegree: Float) {
@@ -185,7 +200,10 @@ class CompassViewModel : BaseViewModel() {
         lon2: Double
     ): Int {
         val theta = lon1 - lon2
-        var distance = sin(degreesToRadians(lat1)) * sin(degreesToRadians(lat2)) + cos(degreesToRadians(lat1)) * cos(degreesToRadians(lat2)) * cos(degreesToRadians(theta))
+        var distance =
+            sin(degreesToRadians(lat1)) * sin(degreesToRadians(lat2)) + cos(degreesToRadians(lat1)) * cos(
+                degreesToRadians(lat2)
+            ) * cos(degreesToRadians(theta))
         distance = acos(distance)
         distance = radiansToDegrees(distance)
         distance *= 0.1112

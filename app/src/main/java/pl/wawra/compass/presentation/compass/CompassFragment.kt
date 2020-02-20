@@ -91,13 +91,17 @@ class CompassFragment : Fragment(), SensorEventListener, LongitudeDialogCallback
             viewLifecycleOwner,
             Observer {
                 if (it.isEmpty()) {
-                    fragment_compass_current_target_container.visibility = View.GONE
+                    fragment_compass_current_target_container.visibility = View.INVISIBLE
                     fragment_compass_target_image.visibility = View.GONE
                 } else {
                     fragment_compass_current_target.text = it
                     setupTargetMarker()
                 }
             }
+        )
+        viewModel.targetAddressString.observe(
+            viewLifecycleOwner,
+            Observer { fragment_compass_current_target_address.text = it }
         )
     }
 
@@ -137,7 +141,7 @@ class CompassFragment : Fragment(), SensorEventListener, LongitudeDialogCallback
                 )
             }
         } else {
-            fragment_compass_current_target_container.visibility = View.GONE
+            fragment_compass_current_target_container.visibility = View.INVISIBLE
             fragment_compass_target_image.visibility = View.GONE
             fragment_compass_latitude_button.setOnClickListener {
                 Toast.makeText(
