@@ -52,11 +52,7 @@ public class LongitudeDialog extends BaseDialog {
         viewModel.setCallBack(callback);
         Context context = getContext();
         if (context != null) {
-            adapter = new ArrayAdapter<>(
-                    getContext(),
-                    android.R.layout.simple_dropdown_item_1line,    // TODO: custom item layout
-                    new ArrayList<String>()
-            );
+            adapter = new ArrayAdapter<>(getContext(), R.layout.item_dropdown, new ArrayList<String>());
         }
         return inflater.inflate(R.layout.dialog_longitude, container, false);
     }

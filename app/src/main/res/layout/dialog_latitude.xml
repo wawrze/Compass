@@ -25,6 +25,7 @@
         android:layout_marginStart="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_large"
         android:layout_marginEnd="@dimen/margin_large"
+        android:textColor="@color/dark_grey"
         android:inputType="numberSigned|numberDecimal"
         android:singleLine="true"
         android:textAlignment="center"

@@ -27,6 +27,7 @@
         android:layout_marginEnd="@dimen/margin_large"
         android:inputType="numberSigned|numberDecimal"
         android:singleLine="true"
+        android:textColor="@color/dark_grey"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

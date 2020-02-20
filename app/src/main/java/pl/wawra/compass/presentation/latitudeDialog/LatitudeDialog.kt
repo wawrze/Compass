@@ -25,13 +25,7 @@ class LatitudeDialog(private val callBack: (() -> Unit)?) : BaseDialog() {
     ): View? {
         viewModel = ViewModelProvider(this).get(LatitudeDialogViewModel::class.java)
         viewModel.callBack = callBack
-        context?.let {
-            adapter = ArrayAdapter(
-                it,
-                android.R.layout.simple_dropdown_item_1line,    // TODO: custom item layout
-                ArrayList<String>()
-            )
-        }
+        context?.let { adapter = ArrayAdapter(it, R.layout.item_dropdown, ArrayList<String>()) }
         return inflater.inflate(R.layout.dialog_latitude, container, false)
     }
 
