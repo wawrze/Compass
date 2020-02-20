@@ -9,6 +9,7 @@ import io.reactivex.plugins.RxJavaPlugins
 import org.junit.Rule
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import org.mockito.Mockito
 import pl.wawra.compass.base.BaseViewModel
 import pl.wawra.compass.di.AppTestComponent
 import java.util.concurrent.Executor
@@ -42,5 +43,11 @@ abstract class BaseTestSuite {
 
     @get:Rule
     val taskExecutorRule = InstantTaskExecutorRule()
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T> any(): T {
+        Mockito.any<T>()
+        return null as T
+    }
 
 }
