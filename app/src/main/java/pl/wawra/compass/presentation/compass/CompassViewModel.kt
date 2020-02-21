@@ -13,7 +13,8 @@ import pl.wawra.compass.database.daos.LocationDao
 import pl.wawra.compass.models.Location
 import pl.wawra.compass.models.RotationModel
 import javax.inject.Inject
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.atan
 
 
 class CompassViewModel : BaseViewModel() {
@@ -96,11 +97,6 @@ class CompassViewModel : BaseViewModel() {
     fun updateLocation(latitude: Double, longitude: Double) {
         val timestamp = System.currentTimeMillis()
         if (lastLocationUpdate != 0L && timestamp - lastLocationUpdate < 5000) return
-
-        val distanceFromLastLocation =
-            calculateDistance(latitude, longitude, lastLocation.lat, lastLocation.lon)
-        if (distanceFromLastLocation < 5) return
-
         lastLocationUpdate = timestamp
         lastLocation.lat = latitude
         lastLocation.lon = longitude
@@ -198,27 +194,6 @@ class CompassViewModel : BaseViewModel() {
         if (targetY < 0) degrees += (if (targetX < 0) 180 else -180)
 
         return degrees.toFloat()
-    }
-
-    private fun calculateDistance(
-        lat1: Double,
-        lon1: Double,
-        lat2: Double,
-        lon2: Double
-    ): Int {
-        val theta = lon1 - lon2
-        var distance =
-            sin(degreesToRadians(lat1)) * sin(degreesToRadians(lat2)) + cos(degreesToRadians(lat1)) * cos(
-                degreesToRadians(lat2)
-            ) * cos(degreesToRadians(theta))
-        distance = acos(distance)
-        distance = radiansToDegrees(distance)
-        distance *= 0.1112
-        return distance.toInt()
-    }
-
-    private fun degreesToRadians(deg: Double): Double {
-        return deg * Math.PI / 180.0
     }
 
     private fun radiansToDegrees(rad: Double): Double {
