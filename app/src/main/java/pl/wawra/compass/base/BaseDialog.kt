@@ -7,8 +7,11 @@ import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
 import android.view.ViewGroup
 import android.view.Window
+import androidx.annotation.MainThread
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import pl.wawra.compass.R
 
 abstract class BaseDialog : DialogFragment() {
@@ -36,6 +39,14 @@ abstract class BaseDialog : DialogFragment() {
         params?.width = ViewGroup.LayoutParams.MATCH_PARENT
         params?.height = ViewGroup.LayoutParams.WRAP_CONTENT
         dialog?.window?.attributes = params as android.view.WindowManager.LayoutParams
+    }
+
+    @MainThread
+    protected fun <T> MutableLiveData<T>.observe(action: (T) -> Unit) {
+        this.observe(
+            this@BaseDialog.viewLifecycleOwner,
+            Observer { action.invoke(it) }
+        )
     }
 
 }

@@ -20,8 +20,6 @@ import android.view.animation.RotateAnimation
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -29,13 +27,14 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.fragment_compass.*
 import pl.wawra.compass.R
+import pl.wawra.compass.base.BaseFragment
 import pl.wawra.compass.models.RotationModel
 import pl.wawra.compass.presentation.latitudeDialog.LatitudeDialog
 import pl.wawra.compass.presentation.longitudeDialog.LongitudeDialog
 import pl.wawra.compass.presentation.longitudeDialog.LongitudeDialogCallback
 import pl.wawra.compass.presentation.noSensorsDialog.NoSensorsDialog
 
-class CompassFragment : Fragment(), SensorEventListener, LongitudeDialogCallback {
+class CompassFragment : BaseFragment(), SensorEventListener, LongitudeDialogCallback {
 
     private lateinit var viewModel: CompassViewModel
     private lateinit var sensorManager: SensorManager
@@ -79,30 +78,18 @@ class CompassFragment : Fragment(), SensorEventListener, LongitudeDialogCallback
     }
 
     private fun setupObservers() {
-        viewModel.compassRotation.observe(
-            viewLifecycleOwner,
-            Observer { rotateImage(fragment_compass_compass_image, it) }
-        )
-        viewModel.targetMarkerRotation.observe(
-            viewLifecycleOwner,
-            Observer { rotateImage(fragment_compass_target_image, it) }
-        )
-        viewModel.targetLocationString.observe(
-            viewLifecycleOwner,
-            Observer {
-                if (it.isEmpty()) {
-                    fragment_compass_current_target_container.visibility = View.INVISIBLE
-                    fragment_compass_target_image.visibility = View.GONE
-                } else {
-                    fragment_compass_current_target.text = it
-                    setupTargetMarker()
-                }
+        viewModel.compassRotation.observe { rotateImage(fragment_compass_compass_image, it) }
+        viewModel.targetMarkerRotation.observe { rotateImage(fragment_compass_target_image, it) }
+        viewModel.targetLocationString.observe {
+            if (it.isEmpty()) {
+                fragment_compass_current_target_container.visibility = View.INVISIBLE
+                fragment_compass_target_image.visibility = View.GONE
+            } else {
+                fragment_compass_current_target.text = it
+                setupTargetMarker()
             }
-        )
-        viewModel.targetAddressString.observe(
-            viewLifecycleOwner,
-            Observer { fragment_compass_current_target_address.text = it }
-        )
+        }
+        viewModel.targetAddressString.observe { fragment_compass_current_target_address.text = it }
     }
 
     private fun setupTargetMarker() {

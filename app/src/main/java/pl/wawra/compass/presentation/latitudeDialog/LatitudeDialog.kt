@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.dialog_latitude.*
 import pl.wawra.compass.R
@@ -32,10 +31,7 @@ class LatitudeDialog(private val callBack: (() -> Unit)?) : BaseDialog() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupClickListeners()
-        viewModel.getPreviousLatitudes().observe(
-            viewLifecycleOwner,
-            Observer { adapter.addAll(it) }
-        )
+        viewModel.getPreviousLatitudes().observe { adapter.addAll(it) }
         setupInput()
     }
 
@@ -51,42 +47,36 @@ class LatitudeDialog(private val callBack: (() -> Unit)?) : BaseDialog() {
         dialog_latitude_cancel_button.setOnClickListener { dismissAllowingStateLoss() }
         dialog_latitude_confirm_button.setOnClickListener {
             val latitude = dialog_latitude_input.text.toString()
-            viewModel.verifyLatitude(latitude).observe(
-                viewLifecycleOwner,
-                Observer {
-                    if (it == 0) {
-                        dialog_latitude_input_error_message.visibility = View.GONE
-                        onCorrectLatitude(latitude)
-                    } else {
-                        dialog_latitude_input_error_message.text = getString(it)
-                        dialog_latitude_input_error_message.visibility = View.VISIBLE
-                    }
+            viewModel.verifyLatitude(latitude).observe {
+                if (it == 0) {
+                    dialog_latitude_input_error_message.visibility = View.GONE
+                    onCorrectLatitude(latitude)
+                } else {
+                    dialog_latitude_input_error_message.text = getString(it)
+                    dialog_latitude_input_error_message.visibility = View.VISIBLE
                 }
-            )
+            }
         }
     }
 
     private fun onCorrectLatitude(latitude: String) {
-        viewModel.insertNewLatitude(latitude).observe(
-            viewLifecycleOwner,
-            Observer {
-                if (it) {
-                    Toast.makeText(
-                        context,
-                        getString(R.string.new_latitude_set),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    viewModel.callBack?.invoke()
-                    dismissAllowingStateLoss()
-                } else {
-                    Toast.makeText(
-                        context,
-                        getString(R.string.unknown_error),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+        viewModel.insertNewLatitude(latitude).observe {
+            if (it) {
+                Toast.makeText(
+                    context,
+                    getString(R.string.new_latitude_set),
+                    Toast.LENGTH_LONG
+                ).show()
+                viewModel.callBack?.invoke()
+                dismissAllowingStateLoss()
+            } else {
+                Toast.makeText(
+                    context,
+                    getString(R.string.unknown_error),
+                    Toast.LENGTH_LONG
+                ).show()
             }
-        )
+        }
     }
 
     companion object {
