@@ -7,11 +7,11 @@ import org.junit.Test
 import org.mockito.Mockito
 import pl.wawra.compass.BaseTestSuite
 import pl.wawra.compass.R
-import pl.wawra.compass.presentation.longitudeDialog.LongitudeDialogViewModel
+import pl.wawra.compass.presentation.targetDialog.TargetDialogViewModel
 
-class LongitudeDialogViewModelTestSuite : BaseTestSuite() {
+class TargetDialogViewModelTestSuite : BaseTestSuite() {
 
-    private val objectUnderTest = LongitudeDialogViewModel()
+    private val objectUnderTest = TargetDialogViewModel()
 
     @Test
     fun shouldGetPreviousLongitudes() {

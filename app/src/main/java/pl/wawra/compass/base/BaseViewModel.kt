@@ -5,8 +5,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import pl.wawra.compass.di.components.ApplicationComponent
 import pl.wawra.compass.presentation.compass.CompassViewModel
-import pl.wawra.compass.presentation.latitudeDialog.LatitudeDialogViewModel
-import pl.wawra.compass.presentation.longitudeDialog.LongitudeDialogViewModel
+import pl.wawra.compass.presentation.targetDialog.TargetDialogViewModel
 
 abstract class BaseViewModel : ViewModel() {
 
@@ -24,8 +23,7 @@ abstract class BaseViewModel : ViewModel() {
         @Suppress("LeakingThis")
         when (this) {
             is CompassViewModel -> appComponent?.inject(this)
-            is LatitudeDialogViewModel -> appComponent?.inject(this)
-            is LongitudeDialogViewModel -> appComponent?.inject(this)
+            is TargetDialogViewModel -> appComponent?.inject(this)
         }
     }
 

@@ -4,12 +4,10 @@
     <string name="enter_longitude">Enter longitude:</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
-    <string name="latitude">Latitude</string>
-    <string name="longitude">Longitude</string>
+    <string name="new_target">New target</string>
     <string name="have_to_grant_permission">You must grant location access permission to use this function!</string>
-    <string name="new_latitude_set">New target latitude set.</string>
     <string name="unknown_error">Unknown error!</string>
-    <string name="new_longitude_set">New target longitude set.</string>
+    <string name="new_target_set">New target location set.</string>
     <string name="current_target">Current target: </string>
     <string name="latitude_to_small">Latitude must be greater than -90!</string>
     <string name="latitude_to_big">Latitude must be less than 90!</string>

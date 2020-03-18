@@ -29,12 +29,12 @@ import kotlinx.android.synthetic.main.fragment_compass.*
 import pl.wawra.compass.R
 import pl.wawra.compass.base.BaseFragment
 import pl.wawra.compass.models.RotationModel
-import pl.wawra.compass.presentation.latitudeDialog.LatitudeDialog
-import pl.wawra.compass.presentation.longitudeDialog.LongitudeDialog
-import pl.wawra.compass.presentation.longitudeDialog.LongitudeDialogCallback
+import pl.wawra.compass.presentation.targetDialog.TargetDialog
+import pl.wawra.compass.presentation.targetDialog.TargetDialogCallback
 import pl.wawra.compass.presentation.noSensorsDialog.NoSensorsDialog
 
-class CompassFragment : BaseFragment(), SensorEventListener, LongitudeDialogCallback {
+class CompassFragment : BaseFragment(), SensorEventListener,
+    TargetDialogCallback {
 
     private lateinit var viewModel: CompassViewModel
     private lateinit var sensorManager: SensorManager
@@ -116,28 +116,16 @@ class CompassFragment : BaseFragment(), SensorEventListener, LongitudeDialogCall
         if (enabled) {
             fragment_compass_current_target_container.visibility = View.VISIBLE
             fragment_compass_target_image.visibility = View.VISIBLE
-            fragment_compass_latitude_button.setOnClickListener {
-                LatitudeDialog.createAndShow(parentFragmentManager) {
-                    viewModel.updateTargetLocation()
-                }
-            }
-            fragment_compass_longitude_button.setOnClickListener {
-                LongitudeDialog.createAndShow(
+            fragment_compass_target_button.setOnClickListener {
+                TargetDialog.createAndShow(
                     parentFragmentManager,
-                    this as LongitudeDialogCallback
+                    this as TargetDialogCallback
                 )
             }
         } else {
             fragment_compass_current_target_container.visibility = View.INVISIBLE
             fragment_compass_target_image.visibility = View.GONE
-            fragment_compass_latitude_button.setOnClickListener {
-                Toast.makeText(
-                    context,
-                    getString(R.string.have_to_grant_permission),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-            fragment_compass_longitude_button.setOnClickListener {
+            fragment_compass_target_button.setOnClickListener {
                 Toast.makeText(
                     context,
                     getString(R.string.have_to_grant_permission),

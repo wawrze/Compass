@@ -7,7 +7,6 @@ import org.junit.Test
 import org.mockito.Mockito
 import pl.wawra.compass.BaseTestSuite
 import pl.wawra.compass.R
-import pl.wawra.compass.presentation.latitudeDialog.LatitudeDialogViewModel
 
 class LatitudeDialogViewModelTestSuite : BaseTestSuite() {
 

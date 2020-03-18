@@ -5,12 +5,10 @@
     <string name="enter_longitude">Podaj długość geograficzną:</string>
     <string name="cancel">Anuluj</string>
     <string name="confirm">Zatwierdź</string>
-    <string name="latitude">Szerokość</string>
-    <string name="longitude">Długość</string>
+    <string name="new_target">Nowy cel</string>
     <string name="have_to_grant_permission">Aby korzystać z tej funkcji musisz zezwolnić na dostęp do lokalizacji!</string>
-    <string name="new_latitude_set">Nowa szerokość geograficzna celu została ustawiona.</string>
     <string name="unknown_error">Wystąpił nieznany błąd!</string>
-    <string name="new_longitude_set">Nowa długość geograficzna celu została ustawiona.</string>
+    <string name="new_target_set">Nowa długość geograficzna celu została ustawiona.</string>
     <string name="current_target">Ustawiony cel: </string>
     <string name="latitude_to_small">Szerokość musi być większa niż -90!</string>
     <string name="latitude_to_big">Szerokość musi być mniejsza niż 90!</string>

@@ -6,8 +6,7 @@ import pl.wawra.compass.di.modules.DatabaseModule
 import pl.wawra.compass.di.modules.GeocoderModule
 import pl.wawra.compass.presentation.MainActivity
 import pl.wawra.compass.presentation.compass.CompassViewModel
-import pl.wawra.compass.presentation.latitudeDialog.LatitudeDialogViewModel
-import pl.wawra.compass.presentation.longitudeDialog.LongitudeDialogViewModel
+import pl.wawra.compass.presentation.targetDialog.TargetDialogViewModel
 
 @Component(modules = [DatabaseModule::class, GeocoderModule::class])
 interface ApplicationComponent {
@@ -15,7 +14,6 @@ interface ApplicationComponent {
     fun inject(mainActivity: MainActivity)
     fun inject(app: App)
     fun inject(compassViewModel: CompassViewModel)
-    fun inject(latitudeDialogViewModel: LatitudeDialogViewModel)
-    fun inject(longitudeDialogViewModel: LongitudeDialogViewModel)
+    fun inject(targetDialogViewModel: TargetDialogViewModel)
 
 }
