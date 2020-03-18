@@ -29,12 +29,13 @@ import kotlinx.android.synthetic.main.fragment_compass.*
 import pl.wawra.compass.R
 import pl.wawra.compass.base.BaseFragment
 import pl.wawra.compass.models.RotationModel
+import pl.wawra.compass.presentation.MainActivity
 import pl.wawra.compass.presentation.noSensorsDialog.NoSensorsDialog
 import pl.wawra.compass.presentation.targetDialog.TargetDialog
-import pl.wawra.compass.presentation.targetDialog.TargetDialogCallback
+import pl.wawra.compass.presentation.targetDialog.TargetDialogListener
 
 class CompassFragment : BaseFragment(), SensorEventListener,
-    TargetDialogCallback {
+    TargetDialogListener {
 
     private lateinit var viewModel: CompassViewModel
     private lateinit var sensorManager: SensorManager
@@ -58,6 +59,7 @@ class CompassFragment : BaseFragment(), SensorEventListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupObservers()
+        (activity as MainActivity).targetDialogListener = this
     }
 
     override fun onResume() {
@@ -117,10 +119,7 @@ class CompassFragment : BaseFragment(), SensorEventListener,
             fragment_compass_current_target_container.visibility = View.VISIBLE
             fragment_compass_target_image.visibility = View.VISIBLE
             fragment_compass_target_button.setOnClickListener {
-                TargetDialog.createAndShow(
-                    parentFragmentManager,
-                    this as TargetDialogCallback
-                )
+                TargetDialog.createAndShow(parentFragmentManager)
             }
         } else {
             fragment_compass_current_target_container.visibility = View.INVISIBLE

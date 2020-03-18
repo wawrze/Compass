@@ -11,8 +11,9 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
 import pl.wawra.compass.App
 import pl.wawra.compass.R
+import pl.wawra.compass.presentation.targetDialog.TargetDialogListener
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), TargetDialogListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +56,11 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val PERMISSIONS_REQUEST = 777
+    }
+
+    var targetDialogListener: TargetDialogListener? = null
+    override fun onNewLongitude() {
+        targetDialogListener?.onNewLongitude()
     }
 
 }

@@ -27,7 +27,7 @@ import pl.wawra.compass.base.BaseDialog;
 
 public class TargetDialog extends BaseDialog {
 
-    private final TargetDialogCallback callback;
+    private TargetDialogListener targetDialogListener;
     private TargetDialogViewModel viewModel;
     private ArrayAdapter<String> longitudeAdapter;
     private ArrayAdapter<String> latitudeAdapter;
@@ -39,12 +39,8 @@ public class TargetDialog extends BaseDialog {
     private Button cancelButton;
     private Button confirmButton;
 
-    private TargetDialog(TargetDialogCallback callback) {
-        this.callback = callback;
-    }
-
-    public static void createAndShow(FragmentManager fragmentManager, TargetDialogCallback callback) {
-        TargetDialog dialog = new TargetDialog(callback);
+    public static void createAndShow(FragmentManager fragmentManager) {
+        TargetDialog dialog = new TargetDialog();
         if (fragmentManager != null) dialog.show(fragmentManager);
     }
 
@@ -53,7 +49,6 @@ public class TargetDialog extends BaseDialog {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewModelProvider viewModelProvider = new ViewModelProvider(this);
         viewModel = viewModelProvider.get(TargetDialogViewModel.class);
-        viewModel.setCallBack(callback);
         Context context = getContext();
         if (context != null) {
             longitudeAdapter = new ArrayAdapter<>(getContext(), R.layout.item_dropdown, new ArrayList<String>());
@@ -63,8 +58,18 @@ public class TargetDialog extends BaseDialog {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            targetDialogListener = (TargetDialogListener) context;
+        } catch (ClassCastException e) {
+            Toast.makeText(context, getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         viewModel.getPreviousLatitudes().observe(
                 getViewLifecycleOwner(),
                 new Observer<List<String>>() {
@@ -181,8 +186,9 @@ public class TargetDialog extends BaseDialog {
                                     getString(R.string.new_target_set),
                                     Toast.LENGTH_LONG
                             ).show();
-                            if (viewModel.getCallBack() != null)
-                                viewModel.getCallBack().onNewLongitude();
+
+                            if (targetDialogListener != null) targetDialogListener.onNewLongitude();
+
                             dismissAllowingStateLoss();
                         } else {
                             Toast.makeText(

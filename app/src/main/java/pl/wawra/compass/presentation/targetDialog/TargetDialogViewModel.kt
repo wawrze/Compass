@@ -15,8 +15,6 @@ class TargetDialogViewModel : BaseViewModel() {
     @Inject
     lateinit var locationDao: LocationDao
 
-    var callBack: TargetDialogCallback? = null
-
     fun insertNewTarget(latitude: String, longitude: String): MutableLiveData<Boolean> {
         val result = MutableLiveData<Boolean>()
 

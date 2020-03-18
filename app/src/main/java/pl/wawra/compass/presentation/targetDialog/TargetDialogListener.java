@@ -1,5 +1,5 @@
 package pl.wawra.compass.presentation.targetDialog;
 
-public interface TargetDialogCallback {
+public interface TargetDialogListener {
     void onNewLongitude();
 }
