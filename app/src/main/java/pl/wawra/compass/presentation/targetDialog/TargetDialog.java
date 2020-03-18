@@ -57,6 +57,7 @@ public class TargetDialog extends BaseDialog {
         try {
             targetDialogListener = (TargetDialogListener) context;
         } catch (ClassCastException e) {
+            // TODO: extension for toasts
             Toast.makeText(context, getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
         }
     }
@@ -120,6 +121,7 @@ public class TargetDialog extends BaseDialog {
         );
     }
 
+    // TODO: decrease nesting
     private void setupClickListeners() {
         cancelButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -169,6 +171,7 @@ public class TargetDialog extends BaseDialog {
         );
     }
 
+    // TODO: decrease nesting
     private void onCorrectTarget(String latitude, String longitude) {
         viewModel.insertNewTarget(latitude, longitude).observe(
                 getViewLifecycleOwner(),
@@ -176,6 +179,7 @@ public class TargetDialog extends BaseDialog {
                     @Override
                     public void onChanged(Boolean isSuccess) {
                         if (isSuccess) {
+                            // TODO: extension for toasts
                             Toast.makeText(
                                     getContext(),
                                     getString(R.string.new_target_set),
@@ -186,6 +190,7 @@ public class TargetDialog extends BaseDialog {
 
                             dismissAllowingStateLoss();
                         } else {
+                            // TODO: extension for toasts
                             Toast.makeText(
                                     getContext(),
                                     getString(R.string.unknown_error),

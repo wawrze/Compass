@@ -65,6 +65,7 @@ class CompassViewModel : BaseViewModel() {
             }.addToDisposables()
     }
 
+    // TODO: extract some code
     fun handleSensorEvent(event: SensorEvent) {
         when (event.sensor.type) {
             Sensor.TYPE_MAGNETIC_FIELD -> magneticFieldValues?.let {
@@ -103,6 +104,7 @@ class CompassViewModel : BaseViewModel() {
         lastLocation.lon = longitude
     }
 
+    // TODO: decrease nesting
     private fun updateTargetAddress(lat: Double, lon: Double) {
         Observable.fromCallable { geocoder.getFromLocation(lat, lon, 1) }
             .observeOn(AndroidSchedulers.mainThread())
@@ -130,6 +132,7 @@ class CompassViewModel : BaseViewModel() {
             ).addToDisposables()
     }
 
+    // TODO: move to separate class, split to few functions?, move to back thread
     private fun updateRotations(newDegree: Float) {
         val timestamp = System.currentTimeMillis()
         if (lastCompassUpdate != 0L && timestamp - lastCompassUpdate < lastAnimationLength) return

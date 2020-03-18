@@ -93,6 +93,7 @@ class CompassFragment : BaseFragment(), SensorEventListener, TargetDialogListene
 
     private fun setupTargetMarker() {
         context?.let {
+            // TODO: extract conditions
             if (
                 ActivityCompat.checkSelfPermission(
                     it,
@@ -122,6 +123,7 @@ class CompassFragment : BaseFragment(), SensorEventListener, TargetDialogListene
             fragment_compass_current_target_container.visibility = View.INVISIBLE
             fragment_compass_target_image.visibility = View.GONE
             fragment_compass_target_button.setOnClickListener {
+                // TODO: extension for toasts
                 Toast.makeText(
                     context,
                     getString(R.string.have_to_grant_permission),

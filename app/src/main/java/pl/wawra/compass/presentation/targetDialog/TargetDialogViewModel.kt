@@ -18,6 +18,7 @@ class TargetDialogViewModel : BaseViewModel() {
     fun insertNewTarget(latitude: String, longitude: String): MutableLiveData<Boolean> {
         val result = MutableLiveData<Boolean>()
 
+        // TODO: extract to separate function
         val latitudeDouble: Double
         try {
             latitudeDouble = latitude.toDouble()
@@ -25,17 +26,18 @@ class TargetDialogViewModel : BaseViewModel() {
             result.apply { value = false }
             return result
         }
+        val latitudeToInsert = Latitude().apply {
+            value = latitudeDouble
+            isActive = true
+        }
+
+        // TODO: extract to separate function
         val longitudeDouble: Double
         try {
             longitudeDouble = longitude.toDouble()
         } catch (e: Throwable) {
             result.apply { value = false }
             return result
-        }
-
-        val latitudeToInsert = Latitude().apply {
-            value = latitudeDouble
-            isActive = true
         }
         val longitudeToInsert = Longitude().apply {
             value = longitudeDouble

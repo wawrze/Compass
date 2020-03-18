@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_grey">
-
+    <!-- TODO: extract fragment_compass_current_target_container
+               or make hierarchy flat -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/fragment_compass_current_target_container"
         android:layout_width="0dp"

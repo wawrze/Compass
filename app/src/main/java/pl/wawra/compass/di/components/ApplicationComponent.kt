@@ -16,4 +16,9 @@ interface ApplicationComponent {
     fun inject(compassViewModel: CompassViewModel)
     fun inject(targetDialogViewModel: TargetDialogViewModel)
 
+    /* TODO: improve (e.g. constructor injection in view models)
+        https://github.com/android/architecture-samples/tree/dagger-android
+        https://www.youtube.com/watch?v=9fn5s8_CYJI
+     */
+
 }

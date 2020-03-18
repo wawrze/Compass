@@ -7,6 +7,8 @@ import pl.wawra.compass.presentation.compass.CompassViewModel
 
 class CompassViewModelTestSuite : BaseTestSuite() {
 
+    // TODO: CompassViewModel tests
+
     private val objectUnderTest = CompassViewModel()
 
     @Test

@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity(), TargetDialogListener, Navigation {
     }
 
     private fun checkPermission() {
+        // TODO: extract conditions, simplify
         if (
             ActivityCompat.checkSelfPermission(
                 this,
