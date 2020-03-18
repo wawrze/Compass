@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import kotlinx.android.synthetic.main.dialog_no_sensors.*
 import pl.wawra.compass.R
 import pl.wawra.compass.base.BaseDialog
 
 class NoSensorsDialog : BaseDialog() {
+
+    init {
+        isCancelable = false
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,15 +25,6 @@ class NoSensorsDialog : BaseDialog() {
         dialog_no_sensors_close_button.setOnClickListener {
             dismissAllowingStateLoss()
             activity?.finishAffinity()
-        }
-    }
-
-    companion object {
-        fun createAndShow(fragmentManager: FragmentManager?) {
-            val dialog = NoSensorsDialog().apply {
-                isCancelable = false
-            }
-            fragmentManager?.let { dialog.show(it) }
         }
     }
 

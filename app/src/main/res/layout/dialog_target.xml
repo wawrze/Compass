@@ -98,6 +98,8 @@
         android:layout_marginEnd="@dimen/margin_regular"
         android:layout_marginBottom="@dimen/margin_large"
         android:text="@string/cancel"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/dialog_target_confirm_button"
         app:layout_constraintStart_toStartOf="parent"

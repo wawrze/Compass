@@ -9,16 +9,11 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.annotation.MainThread
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import pl.wawra.compass.R
 
 abstract class BaseDialog : DialogFragment() {
-
-    fun show(fragmentManager: FragmentManager?) {
-        fragmentManager?.let { super.show(it, "") }
-    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)

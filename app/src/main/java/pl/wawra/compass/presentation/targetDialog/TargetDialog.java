@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -38,11 +37,6 @@ public class TargetDialog extends BaseDialog {
     private TextView longitudeInputError;
     private Button cancelButton;
     private Button confirmButton;
-
-    public static void createAndShow(FragmentManager fragmentManager) {
-        TargetDialog dialog = new TargetDialog();
-        if (fragmentManager != null) dialog.show(fragmentManager);
-    }
 
     @Nullable
     @Override
@@ -103,6 +97,7 @@ public class TargetDialog extends BaseDialog {
     }
 
     private void setupInputs() {
+        cancelButton.requestFocus();
         latitudeInput.setAdapter(latitudeAdapter);
         latitudeInput.setThreshold(1);
         latitudeInput.setOnFocusChangeListener(

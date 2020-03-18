@@ -30,12 +30,9 @@ import pl.wawra.compass.R
 import pl.wawra.compass.base.BaseFragment
 import pl.wawra.compass.models.RotationModel
 import pl.wawra.compass.presentation.MainActivity
-import pl.wawra.compass.presentation.noSensorsDialog.NoSensorsDialog
-import pl.wawra.compass.presentation.targetDialog.TargetDialog
 import pl.wawra.compass.presentation.targetDialog.TargetDialogListener
 
-class CompassFragment : BaseFragment(), SensorEventListener,
-    TargetDialogListener {
+class CompassFragment : BaseFragment(), SensorEventListener, TargetDialogListener {
 
     private lateinit var viewModel: CompassViewModel
     private lateinit var sensorManager: SensorManager
@@ -75,7 +72,7 @@ class CompassFragment : BaseFragment(), SensorEventListener,
         accelerometer = sensorManager.getDefaultSensor(TYPE_ACCELEROMETER)
         magneticField = sensorManager.getDefaultSensor(TYPE_MAGNETIC_FIELD)
         if (!::accelerometer.isInitialized || !::magneticField.isInitialized) {
-            NoSensorsDialog.createAndShow(parentFragmentManager)
+            navigate?.navigate(R.id.to_no_sensors_dialog)
         }
     }
 
@@ -119,7 +116,7 @@ class CompassFragment : BaseFragment(), SensorEventListener,
             fragment_compass_current_target_container.visibility = View.VISIBLE
             fragment_compass_target_image.visibility = View.VISIBLE
             fragment_compass_target_button.setOnClickListener {
-                TargetDialog.createAndShow(parentFragmentManager)
+                navigate?.navigate(R.id.to_target_dialog)
             }
         } else {
             fragment_compass_current_target_container.visibility = View.INVISIBLE
