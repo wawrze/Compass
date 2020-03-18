@@ -21,6 +21,7 @@ class CompassViewModel : BaseViewModel() {
 
     @Inject
     lateinit var locationDao: LocationDao
+
     @Inject
     lateinit var geocoder: Geocoder
 

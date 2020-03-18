@@ -12,11 +12,11 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_large"
         android:text="@string/enter_latitude"
-        android:textSize="16sp"
         android:textColor="@color/dark_grey"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/dialog_target_latitude_input"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/dialog_target_latitude_input"
-        app:layout_constraintBottom_toBottomOf="@id/dialog_target_latitude_input"/>
+        app:layout_constraintTop_toTopOf="@id/dialog_target_latitude_input" />
 
     <AutoCompleteTextView
         android:id="@+id/dialog_target_latitude_input"
@@ -25,10 +25,10 @@
         android:layout_marginStart="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_large"
         android:layout_marginEnd="@dimen/margin_large"
-        android:textColor="@color/dark_grey"
         android:inputType="numberSigned|numberDecimal"
         android:singleLine="true"
         android:textAlignment="center"
+        android:textColor="@color/dark_grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/dialog_target_latitude_label"
         app:layout_constraintTop_toTopOf="parent"
@@ -53,10 +53,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_large"
         android:text="@string/enter_longitude"
-        android:textSize="16sp"
         android:textColor="@color/dark_grey"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@id/dialog_target_longitude_input"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/dialog_target_longitude_input" />
 
     <AutoCompleteTextView
@@ -68,8 +68,8 @@
         android:layout_marginEnd="@dimen/margin_large"
         android:inputType="numberSigned|numberDecimal"
         android:singleLine="true"
-        android:textColor="@color/dark_grey"
         android:textAlignment="center"
+        android:textColor="@color/dark_grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/dialog_target_longitude_label"
         app:layout_constraintTop_toBottomOf="@id/dialog_target_latitude_input_error_message"
@@ -89,8 +89,8 @@
         tools:visibility="visible" />
 
     <Button
-        style="@style/button"
         android:id="@+id/dialog_target_cancel_button"
+        style="@style/button"
         android:layout_width="0dp"
         android:layout_height="@dimen/button_height"
         android:layout_marginStart="@dimen/margin_large"
@@ -104,8 +104,8 @@
         app:layout_constraintTop_toBottomOf="@id/dialog_target_longitude_input_error_message" />
 
     <Button
-        style="@style/button"
         android:id="@+id/dialog_target_confirm_button"
+        style="@style/button"
         android:layout_width="0dp"
         android:layout_height="@dimen/button_height"
         android:layout_marginStart="@dimen/margin_regular"

@@ -46,11 +46,15 @@ class TargetDialogViewModel : BaseViewModel() {
 
         locationDao.changeLatitudesToInactive()
             .flatMap { locationDao.insertLatitude(latitudeToInsert) }
-            .flatMap { locationDao.changeLongitudesToInactive() }
+            .flatMap { if (it < 1) throw Exception() else locationDao.changeLongitudesToInactive() }
             .flatMap { locationDao.insertLongitude(longitudeToInsert) }
+            .map {if (it < 1) throw Exception() else it }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe { result.postValue(true) }
+            .subscribe(
+                { result.postValue(true) },
+                { result.postValue(false) }
+            )
             .addToDisposables()
 
         return result

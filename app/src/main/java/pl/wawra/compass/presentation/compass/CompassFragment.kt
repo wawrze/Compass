@@ -29,9 +29,9 @@ import kotlinx.android.synthetic.main.fragment_compass.*
 import pl.wawra.compass.R
 import pl.wawra.compass.base.BaseFragment
 import pl.wawra.compass.models.RotationModel
+import pl.wawra.compass.presentation.noSensorsDialog.NoSensorsDialog
 import pl.wawra.compass.presentation.targetDialog.TargetDialog
 import pl.wawra.compass.presentation.targetDialog.TargetDialogCallback
-import pl.wawra.compass.presentation.noSensorsDialog.NoSensorsDialog
 
 class CompassFragment : BaseFragment(), SensorEventListener,
     TargetDialogCallback {

@@ -1,4 +1,4 @@
-package pl.wawra.compass.di.modules
+package pl.wawra.compass.testsDI.modules
 
 import android.location.Geocoder
 import dagger.Module
