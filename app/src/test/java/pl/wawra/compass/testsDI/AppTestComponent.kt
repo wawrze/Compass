@@ -2,6 +2,7 @@ package pl.wawra.compass.testsDI
 
 import dagger.Component
 import pl.wawra.compass.di.components.ApplicationComponent
+import pl.wawra.compass.helpersTests.RotationCalculatorTestSuite
 import pl.wawra.compass.testsDI.modules.DatabaseTestModule
 import pl.wawra.compass.testsDI.modules.GeocoderTestModule
 import pl.wawra.compass.testsDI.modules.HelpersTestModule
@@ -22,10 +23,12 @@ interface AppTestComponent : ApplicationComponent {
         when (o) {
             is CompassViewModelTestSuite -> inject(o)
             is TargetDialogViewModelTestSuite -> inject(o)
+            is RotationCalculatorTestSuite -> inject(o)
         }
     }
 
     fun inject(compassViewModelTestSuite: CompassViewModelTestSuite)
-    fun inject(longitudeDialogViewModelTestSuite: TargetDialogViewModelTestSuite)
+    fun inject(targetDialogViewModelTestSuite: TargetDialogViewModelTestSuite)
+    fun inject(rotationCalculatorTestSuite: RotationCalculatorTestSuite)
 
 }
