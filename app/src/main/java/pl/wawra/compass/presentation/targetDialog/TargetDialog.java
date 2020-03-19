@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,16 +50,12 @@ public class TargetDialog extends BaseDialog {
         return inflater.inflate(R.layout.dialog_target, container, false);
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            targetDialogListener = (TargetDialogListener) context;
-        } catch (ClassCastException e) {
-            // TODO: extension for toasts
-            Toast.makeText(context, getString(R.string.unknown_error), Toast.LENGTH_LONG).show();
+    private View.OnClickListener cancelButtonObserver = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            dismissAllowingStateLoss();
         }
-    }
+    };
 
     @Override
     public void onResume() {
@@ -120,86 +115,87 @@ public class TargetDialog extends BaseDialog {
                 }
         );
     }
+    private View.OnClickListener confirmButtonObserver = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final String latitude = latitudeInput.getText().toString();
+            final String longitude = longitudeInput.getText().toString();
+            viewModel.verifyTarget(latitude, longitude).observe(
+                    getViewLifecycleOwner(),
+                    new VerifyTargetObserver(latitude, longitude)
+            );
+        }
+    };
+    private Observer<Boolean> insertNewTargetObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(Boolean isSuccess) {
+            if (isSuccess) {
+                showToast(R.string.new_target_set);
+                if (targetDialogListener != null) targetDialogListener.onNewLongitude();
 
-    // TODO: decrease nesting
-    private void setupClickListeners() {
-        cancelButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dismissAllowingStateLoss();
-                    }
-                }
-        );
-        confirmButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final String latitude = latitudeInput.getText().toString();
-                        final String longitude = longitudeInput.getText().toString();
-                        viewModel.verifyTarget(latitude, longitude).observe(
-                                getViewLifecycleOwner(),
-                                new Observer<Pair<Integer, Integer>>() {
-                                    @Override
-                                    public void onChanged(Pair<Integer, Integer> errorMessagesRes) {
-                                        int latitudeErrorMessageRes = errorMessagesRes.getFirst();
-                                        int longitudeErrorMessageRes = errorMessagesRes.getSecond();
+                dismissAllowingStateLoss();
+            } else {
+                showToast(R.string.unknown_error);
+            }
+        }
+    };
 
-                                        if (latitudeErrorMessageRes == 0 && longitudeErrorMessageRes == 0) {
-                                            latitudeInputError.setVisibility(View.INVISIBLE);
-                                            longitudeInputError.setVisibility(View.INVISIBLE);
-                                            onCorrectTarget(latitude, longitude);
-                                        } else {
-                                            if (latitudeErrorMessageRes != 0) {
-                                                latitudeInputError.setText(latitudeErrorMessageRes);
-                                                latitudeInputError.setVisibility(View.VISIBLE);
-                                            } else {
-                                                latitudeInputError.setVisibility(View.INVISIBLE);
-                                            }
-                                            if (longitudeErrorMessageRes != 0) {
-                                                longitudeInputError.setText(longitudeErrorMessageRes);
-                                                longitudeInputError.setVisibility(View.VISIBLE);
-                                            } else {
-                                                longitudeInputError.setVisibility(View.INVISIBLE);
-                                            }
-                                        }
-                                    }
-                                }
-                        );
-                    }
-                }
-        );
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            targetDialogListener = (TargetDialogListener) context;
+        } catch (ClassCastException e) {
+            showToast(R.string.unknown_error);
+        }
     }
 
-    // TODO: decrease nesting
+    private void setupClickListeners() {
+        cancelButton.setOnClickListener(cancelButtonObserver);
+        confirmButton.setOnClickListener(confirmButtonObserver);
+    }
+
     private void onCorrectTarget(String latitude, String longitude) {
         viewModel.insertNewTarget(latitude, longitude).observe(
                 getViewLifecycleOwner(),
-                new Observer<Boolean>() {
-                    @Override
-                    public void onChanged(Boolean isSuccess) {
-                        if (isSuccess) {
-                            // TODO: extension for toasts
-                            Toast.makeText(
-                                    getContext(),
-                                    getString(R.string.new_target_set),
-                                    Toast.LENGTH_LONG
-                            ).show();
-
-                            if (targetDialogListener != null) targetDialogListener.onNewLongitude();
-
-                            dismissAllowingStateLoss();
-                        } else {
-                            // TODO: extension for toasts
-                            Toast.makeText(
-                                    getContext(),
-                                    getString(R.string.unknown_error),
-                                    Toast.LENGTH_LONG
-                            ).show();
-                        }
-                    }
-                }
+                insertNewTargetObserver
         );
+    }
+
+    private class VerifyTargetObserver implements Observer<Pair<Integer, Integer>> {
+        private final String latitude;
+        private final String longitude;
+
+        VerifyTargetObserver(String latitude, String longitude) {
+            super();
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+
+        @Override
+        public void onChanged(Pair<Integer, Integer> errorMessagesRes) {
+            int latitudeErrorMessageRes = errorMessagesRes.getFirst();
+            int longitudeErrorMessageRes = errorMessagesRes.getSecond();
+
+            if (latitudeErrorMessageRes == 0 && longitudeErrorMessageRes == 0) {
+                latitudeInputError.setVisibility(View.INVISIBLE);
+                longitudeInputError.setVisibility(View.INVISIBLE);
+                onCorrectTarget(latitude, longitude);
+            } else {
+                if (latitudeErrorMessageRes != 0) {
+                    latitudeInputError.setText(latitudeErrorMessageRes);
+                    latitudeInputError.setVisibility(View.VISIBLE);
+                } else {
+                    latitudeInputError.setVisibility(View.INVISIBLE);
+                }
+                if (longitudeErrorMessageRes != 0) {
+                    longitudeInputError.setText(longitudeErrorMessageRes);
+                    longitudeInputError.setVisibility(View.VISIBLE);
+                } else {
+                    longitudeInputError.setVisibility(View.INVISIBLE);
+                }
+            }
+        }
     }
 
 }

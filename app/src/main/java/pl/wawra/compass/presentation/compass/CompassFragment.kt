@@ -1,8 +1,6 @@
 package pl.wawra.compass.presentation.compass
 
-import android.Manifest
 import android.content.Context.SENSOR_SERVICE
-import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.Sensor.TYPE_ACCELEROMETER
 import android.hardware.Sensor.TYPE_MAGNETIC_FIELD
@@ -18,8 +16,6 @@ import android.view.ViewGroup
 import android.view.animation.Animation.RELATIVE_TO_SELF
 import android.view.animation.RotateAnimation
 import android.widget.ImageView
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -106,17 +102,7 @@ class CompassFragment : BaseFragment(), SensorEventListener, TargetDialogListene
 
     private fun setupTargetMarker() {
         context?.let {
-            // TODO: extract conditions
-            if (
-                ActivityCompat.checkSelfPermission(
-                    it,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(
-                    it,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
+            if (!MainActivity.checkArePermissionsGranted(it)) {
                 setupTargetMarkerAndButtons(enabled = true)
                 getLocations()
             } else {
@@ -134,12 +120,7 @@ class CompassFragment : BaseFragment(), SensorEventListener, TargetDialogListene
         } else {
             changeTargetVisibility(false)
             fragment_compass_target_button.setOnClickListener {
-                // TODO: extension for toasts
-                Toast.makeText(
-                    context,
-                    getString(R.string.have_to_grant_permission),
-                    Toast.LENGTH_LONG
-                ).show()
+                showToast(R.string.have_to_grant_permission)
             }
         }
     }

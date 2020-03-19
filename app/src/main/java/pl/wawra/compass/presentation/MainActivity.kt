@@ -1,6 +1,7 @@
 package pl.wawra.compass.presentation
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -22,7 +23,7 @@ class MainActivity : AppCompatActivity(), TargetDialogListener, Navigation {
         (application as App).appComponent?.inject(this)
         setContentView(R.layout.activity_main)
 
-        checkPermission()
+        askForPermissionIfNeeded()
         initGoogleClient()
     }
 
@@ -34,18 +35,8 @@ class MainActivity : AppCompatActivity(), TargetDialogListener, Navigation {
         }
     }
 
-    private fun checkPermission() {
-        // TODO: extract conditions, simplify
-        if (
-            ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-            || ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
+    private fun askForPermissionIfNeeded() {
+        if (!checkArePermissionsGranted(this)) {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(
@@ -57,10 +48,6 @@ class MainActivity : AppCompatActivity(), TargetDialogListener, Navigation {
         }
     }
 
-    companion object {
-        private const val PERMISSIONS_REQUEST = 777
-    }
-
     var targetDialogListener: TargetDialogListener? = null
     override fun onNewLongitude() {
         targetDialogListener?.onNewLongitude()
@@ -68,5 +55,24 @@ class MainActivity : AppCompatActivity(), TargetDialogListener, Navigation {
 
     override fun getNavigationController() =
         findNavController(R.id.activity_main_fragment_container)
+
+    companion object {
+
+        private const val PERMISSIONS_REQUEST = 777
+
+        fun checkArePermissionsGranted(context: Context): Boolean {
+            val fineLocationPermission = ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            val coarseLocationPermission = ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+            return fineLocationPermission == PackageManager.PERMISSION_GRANTED
+                    && coarseLocationPermission == PackageManager.PERMISSION_GRANTED
+        }
+
+    }
 
 }

@@ -7,10 +7,8 @@ import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
 import android.view.ViewGroup
 import android.view.Window
-import androidx.annotation.MainThread
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import pl.wawra.compass.R
 
 abstract class BaseDialog : DialogFragment() {
@@ -36,12 +34,8 @@ abstract class BaseDialog : DialogFragment() {
         dialog?.window?.attributes = params as android.view.WindowManager.LayoutParams
     }
 
-    @MainThread
-    protected fun <T> MutableLiveData<T>.observe(action: (T) -> Unit) {
-        this.observe(
-            this@BaseDialog.viewLifecycleOwner,
-            Observer { action.invoke(it) }
-        )
+    fun showToast(res: Int) {
+        Toast.makeText(context, res, Toast.LENGTH_LONG).show()
     }
 
 }

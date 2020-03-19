@@ -1,5 +1,6 @@
 package pl.wawra.compass.base
 
+import android.widget.Toast
 import androidx.annotation.MainThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -26,6 +27,10 @@ abstract class BaseFragment : Fragment() {
             this@BaseFragment.viewLifecycleOwner,
             Observer { action.invoke(it) }
         )
+    }
+
+    fun showToast(res: Int) {
+        Toast.makeText(context, res, Toast.LENGTH_LONG).show()
     }
 
 }
