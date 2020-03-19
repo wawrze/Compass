@@ -81,14 +81,27 @@ class CompassFragment : BaseFragment(), SensorEventListener, TargetDialogListene
         viewModel.targetMarkerRotation.observe { rotateImage(fragment_compass_target_image, it) }
         viewModel.targetLocationString.observe {
             if (it.isEmpty()) {
-                fragment_compass_current_target_container.visibility = View.INVISIBLE
-                fragment_compass_target_image.visibility = View.GONE
+                changeTargetVisibility(false)
             } else {
                 fragment_compass_current_target.text = it
                 setupTargetMarker()
             }
         }
         viewModel.targetAddressString.observe { fragment_compass_current_target_address.text = it }
+    }
+
+    private fun changeTargetVisibility(isVisible: Boolean) {
+        if (isVisible) {
+            fragment_compass_current_target_label.visibility = View.VISIBLE
+            fragment_compass_current_target.visibility = View.VISIBLE
+            fragment_compass_current_target_address.visibility = View.VISIBLE
+            fragment_compass_target_image.visibility = View.VISIBLE
+        } else {
+            fragment_compass_current_target_label.visibility = View.INVISIBLE
+            fragment_compass_current_target.visibility = View.INVISIBLE
+            fragment_compass_current_target_address.visibility = View.INVISIBLE
+            fragment_compass_target_image.visibility = View.GONE
+        }
     }
 
     private fun setupTargetMarker() {
@@ -114,14 +127,12 @@ class CompassFragment : BaseFragment(), SensorEventListener, TargetDialogListene
 
     private fun setupTargetMarkerAndButtons(enabled: Boolean) {
         if (enabled) {
-            fragment_compass_current_target_container.visibility = View.VISIBLE
-            fragment_compass_target_image.visibility = View.VISIBLE
+            changeTargetVisibility(true)
             fragment_compass_target_button.setOnClickListener {
                 navigate?.navigate(R.id.to_target_dialog)
             }
         } else {
-            fragment_compass_current_target_container.visibility = View.INVISIBLE
-            fragment_compass_target_image.visibility = View.GONE
+            changeTargetVisibility(false)
             fragment_compass_target_button.setOnClickListener {
                 // TODO: extension for toasts
                 Toast.makeText(

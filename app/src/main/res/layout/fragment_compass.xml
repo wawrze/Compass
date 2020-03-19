@@ -5,20 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_grey">
-    <!-- TODO: extract fragment_compass_current_target_container
-               or make hierarchy flat -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/fragment_compass_current_target_container"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_large"
-        android:layout_marginTop="@dimen/margin_large"
-        android:layout_marginEnd="@dimen/margin_large"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible">
 
         <TextView
             android:id="@+id/fragment_compass_current_target_label"
@@ -26,6 +12,9 @@
             android:layout_height="wrap_content"
             android:text="@string/current_target"
             android:textColor="@color/orange"
+            android:layout_margin="@dimen/margin_large"
+            android:visibility="invisible"
+            tools:visibility="visible"
             app:layout_constraintEnd_toStartOf="@id/fragment_compass_current_target"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -37,9 +26,11 @@
             android:layout_marginStart="5dp"
             android:singleLine="true"
             android:textColor="@color/orange"
+            android:visibility="invisible"
+            app:layout_constraintTop_toTopOf="@id/fragment_compass_current_target_label"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/fragment_compass_current_target_label"
-            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible"
             tools:text="53.000000, 26.000000" />
 
         <TextView
@@ -48,12 +39,12 @@
             android:layout_height="wrap_content"
             android:minLines="2"
             android:textColor="@color/orange"
+            android:visibility="invisible"
+            tools:visibility="visible"
             app:layout_constraintEnd_toEndOf="@id/fragment_compass_current_target"
             app:layout_constraintStart_toStartOf="@id/fragment_compass_current_target"
             app:layout_constraintTop_toBottomOf="@id/fragment_compass_current_target"
             tools:text="Address, zip code, City, etc." />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/fragment_compass_compass_image"
@@ -65,7 +56,7 @@
         app:layout_constraintBottom_toTopOf="@id/fragment_compass_target_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fragment_compass_current_target_container"
+        app:layout_constraintTop_toBottomOf="@id/fragment_compass_current_target_address"
         tools:ignore="ContentDescription" />
 
     <ImageView
@@ -79,7 +70,7 @@
         app:layout_constraintBottom_toTopOf="@id/fragment_compass_target_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fragment_compass_current_target_container"
+        app:layout_constraintTop_toBottomOf="@id/fragment_compass_current_target_address"
         tools:ignore="ContentDescription"
         tools:visibility="visible" />
 
