@@ -4,10 +4,11 @@ import dagger.Component
 import pl.wawra.compass.di.components.ApplicationComponent
 import pl.wawra.compass.testsDI.modules.DatabaseTestModule
 import pl.wawra.compass.testsDI.modules.GeocoderTestModule
+import pl.wawra.compass.testsDI.modules.HelpersTestModule
 import pl.wawra.compass.viewModelTests.CompassViewModelTestSuite
 import pl.wawra.compass.viewModelTests.TargetDialogViewModelTestSuite
 
-@Component(modules = [DatabaseTestModule::class, GeocoderTestModule::class])
+@Component(modules = [DatabaseTestModule::class, GeocoderTestModule::class, HelpersTestModule::class])
 interface AppTestComponent : ApplicationComponent {
 
     companion object {

@@ -102,7 +102,7 @@ class CompassFragment : BaseFragment(), SensorEventListener, TargetDialogListene
 
     private fun setupTargetMarker() {
         context?.let {
-            if (!MainActivity.checkArePermissionsGranted(it)) {
+            if (MainActivity.checkArePermissionsGranted(it)) {
                 setupTargetMarkerAndButtons(enabled = true)
                 getLocations()
             } else {

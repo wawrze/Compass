@@ -3,6 +3,7 @@ package pl.wawra.compass.presentation.compass
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorManager
+import android.location.Address
 import android.location.Geocoder
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Observable
@@ -10,11 +11,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import pl.wawra.compass.base.BaseViewModel
 import pl.wawra.compass.database.daos.LocationDao
+import pl.wawra.compass.helpers.RotationCalculator
 import pl.wawra.compass.models.Location
 import pl.wawra.compass.models.RotationModel
 import javax.inject.Inject
-import kotlin.math.abs
-import kotlin.math.atan
 
 
 class CompassViewModel : BaseViewModel() {
@@ -25,6 +25,9 @@ class CompassViewModel : BaseViewModel() {
     @Inject
     lateinit var geocoder: Geocoder
 
+    @Inject
+    lateinit var rotationCalculator: RotationCalculator
+
     val compassRotation = MutableLiveData<RotationModel>()
     val targetMarkerRotation = MutableLiveData<RotationModel>()
     val targetLocationString = MutableLiveData<String>()
@@ -33,11 +36,6 @@ class CompassViewModel : BaseViewModel() {
     private var targetLocation: Location? = null
     private val lastLocation = Location(0.0, 0.0)
     private var lastLocationUpdate: Long = 0L
-
-    private var lastCompassDegree: Float = 0.0F
-    private var lastTargetMarkerDegree: Float = 0.0F
-    private var lastCompassUpdate: Long = 0L
-    private var lastAnimationLength: Long = 0L
 
     private var accelerometerValues: FloatArray? = null
         get() {
@@ -60,12 +58,11 @@ class CompassViewModel : BaseViewModel() {
                 it?.let {
                     targetLocation = it
                     targetLocationString.postValue("${it.lat}, ${it.lon}")
-                    updateTargetAddress(it.lat, it.lon)
+                    getTargetAddress(it.lat, it.lon)
                 } ?: targetLocationString.postValue("")
             }.addToDisposables()
     }
 
-    // TODO: extract some code
     fun handleSensorEvent(event: SensorEvent) {
         when (event.sensor.type) {
             Sensor.TYPE_MAGNETIC_FIELD -> magneticFieldValues?.let {
@@ -77,23 +74,39 @@ class CompassViewModel : BaseViewModel() {
             }
             else -> return
         }
+        if (accelerometerValues != null && magneticFieldValues != null) updateRotations()
+    }
 
-        if (accelerometerValues != null && magneticFieldValues != null) {
-            val rotation = FloatArray(9)
-            val isRotation = SensorManager.getRotationMatrix(
-                rotation,
-                null,
-                accelerometerValues,
-                magneticFieldValues
-            )
-            if (isRotation) {
-                val orientation = FloatArray(3)
-                SensorManager.getOrientation(rotation, orientation)
-                updateRotations(orientation[0])
-                accelerometerValues = null
-                magneticFieldValues = null
-            }
+    private fun updateRotations() {
+        val rotation = FloatArray(9)
+        val isRotation = SensorManager.getRotationMatrix(
+            rotation,
+            null,
+            accelerometerValues,
+            magneticFieldValues
+        )
+        if (isRotation) {
+            val orientation = FloatArray(3)
+            SensorManager.getOrientation(rotation, orientation)
+            calculateRotations(orientation[0])
+            accelerometerValues = null
+            magneticFieldValues = null
         }
+    }
+
+    private fun calculateRotations(newDegree: Float) {
+        Observable.fromCallable {
+                rotationCalculator.calculateRotations(newDegree, targetLocation, lastLocation)
+            }.observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                { rotations ->
+                    rotations.first?.let { compassRotation.postValue(it) }
+                    rotations.second?.let { targetMarkerRotation.postValue(it) }
+                },
+                {}
+            )
+            .addToDisposables()
     }
 
     fun updateLocation(latitude: Double, longitude: Double) {
@@ -104,104 +117,33 @@ class CompassViewModel : BaseViewModel() {
         lastLocation.lon = longitude
     }
 
-    // TODO: decrease nesting
-    private fun updateTargetAddress(lat: Double, lon: Double) {
+    private fun getTargetAddress(lat: Double, lon: Double) {
         Observable.fromCallable { geocoder.getFromLocation(lat, lon, 1) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(
                 {
                     if (it.isNotEmpty()) {
-                        val address = it[0]
-                        val lines = address.maxAddressLineIndex
-                        val addressStringBuilder = StringBuilder(address.getAddressLine(0))
-                        if (lines > 1) {
-                            for (i: Int in 1..lines) {
-                                addressStringBuilder.append("\n")
-                                addressStringBuilder.append(address.getAddressLine(i))
-                            }
-                        }
-                        targetAddressString.postValue(addressStringBuilder.toString())
+                        updateTargetAddress(it)
                     } else {
                         targetAddressString.postValue("")
                     }
                 },
-                {
-                    println()
-                }
+                {}
             ).addToDisposables()
     }
 
-    // TODO: move to separate class, split to few functions?, move to back thread
-    private fun updateRotations(newDegree: Float) {
-        val timestamp = System.currentTimeMillis()
-        if (lastCompassUpdate != 0L && timestamp - lastCompassUpdate < lastAnimationLength) return
-        lastCompassUpdate = timestamp
-
-        val calculatedDegree = (-Math.toDegrees(newDegree.toDouble()) + 360).toFloat() % 360
-
-        val change = abs(calculatedDegree - lastCompassDegree)
-        if (change < 10.0) return
-
-        var toDegree = calculatedDegree
-        var fromDegree = lastCompassDegree
-        if (change > 180) {
-            if (lastCompassDegree > calculatedDegree) {
-                toDegree += 360
-            } else {
-                fromDegree += 360
+    private fun updateTargetAddress(addresses: List<Address>) {
+        val address = addresses[0]
+        val lines = address.maxAddressLineIndex
+        val addressStringBuilder = StringBuilder(address.getAddressLine(0))
+        if (lines > 1) {
+            for (i: Int in 1..lines) {
+                addressStringBuilder.append("\n")
+                addressStringBuilder.append(address.getAddressLine(i))
             }
         }
-
-        var animationLength = abs(toDegree - fromDegree).toLong() * 10
-        if (animationLength < 100) animationLength = 100
-
-        lastCompassDegree = calculatedDegree
-        lastAnimationLength = animationLength
-        compassRotation.postValue(
-            RotationModel(
-                fromDegree,
-                toDegree,
-                animationLength
-            )
-        )
-
-        targetLocation ?: return
-        val targetDegreeFromNorth = calculateTargetDegree(
-            targetLocation?.lat ?: 0.0,
-            targetLocation?.lon ?: 0.0,
-            lastLocation.lat,
-            lastLocation.lon
-        )
-        toDegree = (calculatedDegree + targetDegreeFromNorth) % 360
-        lastTargetMarkerDegree = toDegree % 360
-        targetMarkerRotation.postValue(
-            RotationModel(
-                lastTargetMarkerDegree,
-                toDegree,
-                animationLength
-            )
-        )
-    }
-
-    private fun calculateTargetDegree(
-        targetLat: Double,
-        targetLon: Double,
-        currentLat: Double,
-        currentLon: Double
-    ): Float {
-        val targetY = ((targetLat - currentLat) * 10000000).toLong().toDouble()
-        if (targetY == 0.0) return 0F
-        val targetX = ((targetLon - currentLon) * 10000000).toLong().toDouble()
-
-        var degrees = (radiansToDegrees(atan(targetX / targetY)) + 360) % 360
-        if (targetY < 0) degrees += (if (targetX < 0) 180 else -180)
-
-        return degrees.toFloat()
-    }
-
-    private fun radiansToDegrees(rad: Double): Double {
-        return rad * 180.0 / Math.PI
+        targetAddressString.postValue(addressStringBuilder.toString())
     }
 
 }

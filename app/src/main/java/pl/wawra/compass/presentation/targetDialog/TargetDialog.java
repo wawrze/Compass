@@ -115,6 +115,7 @@ public class TargetDialog extends BaseDialog {
                 }
         );
     }
+
     private View.OnClickListener confirmButtonObserver = new View.OnClickListener() {
         @Override
         public void onClick(View v) {

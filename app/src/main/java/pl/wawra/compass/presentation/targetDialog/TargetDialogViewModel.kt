@@ -18,37 +18,14 @@ class TargetDialogViewModel : BaseViewModel() {
     fun insertNewTarget(latitude: String, longitude: String): MutableLiveData<Boolean> {
         val result = MutableLiveData<Boolean>()
 
-        // TODO: extract to separate function
-        val latitudeDouble: Double
-        try {
-            latitudeDouble = latitude.toDouble()
-        } catch (e: Throwable) {
-            result.apply { value = false }
-            return result
-        }
-        val latitudeToInsert = Latitude().apply {
-            value = latitudeDouble
-            isActive = true
-        }
-
-        // TODO: extract to separate function
-        val longitudeDouble: Double
-        try {
-            longitudeDouble = longitude.toDouble()
-        } catch (e: Throwable) {
-            result.apply { value = false }
-            return result
-        }
-        val longitudeToInsert = Longitude().apply {
-            value = longitudeDouble
-            isActive = true
-        }
+        val latitudeToInsert = createLatitude(latitude) ?: return result.apply { value = false }
+        val longitudeToInsert = createLongitude(longitude) ?: return result.apply { value = false }
 
         locationDao.changeLatitudesToInactive()
             .flatMap { locationDao.insertLatitude(latitudeToInsert) }
             .flatMap { if (it < 1) throw Exception() else locationDao.changeLongitudesToInactive() }
             .flatMap { locationDao.insertLongitude(longitudeToInsert) }
-            .map {if (it < 1) throw Exception() else it }
+            .map { if (it < 1) throw Exception() else it }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(
@@ -58,6 +35,32 @@ class TargetDialogViewModel : BaseViewModel() {
             .addToDisposables()
 
         return result
+    }
+
+    private fun createLatitude(latitude: String): Latitude? {
+        val latitudeDouble: Double
+        try {
+            latitudeDouble = latitude.toDouble()
+        } catch (e: Throwable) {
+            return null
+        }
+        return Latitude().apply {
+            value = latitudeDouble
+            isActive = true
+        }
+    }
+
+    private fun createLongitude(longitude: String): Longitude? {
+        val longitudeDouble: Double
+        try {
+            longitudeDouble = longitude.toDouble()
+        } catch (e: Throwable) {
+            return null
+        }
+        return Longitude().apply {
+            value = longitudeDouble
+            isActive = true
+        }
     }
 
     fun verifyTarget(latitude: String, longitude: String): MutableLiveData<Pair<Int, Int>> {

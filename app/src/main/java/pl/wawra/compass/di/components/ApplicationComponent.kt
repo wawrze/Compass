@@ -4,11 +4,12 @@ import dagger.Component
 import pl.wawra.compass.App
 import pl.wawra.compass.di.modules.DatabaseModule
 import pl.wawra.compass.di.modules.GeocoderModule
+import pl.wawra.compass.di.modules.HelpersModule
 import pl.wawra.compass.presentation.MainActivity
 import pl.wawra.compass.presentation.compass.CompassViewModel
 import pl.wawra.compass.presentation.targetDialog.TargetDialogViewModel
 
-@Component(modules = [DatabaseModule::class, GeocoderModule::class])
+@Component(modules = [DatabaseModule::class, GeocoderModule::class, HelpersModule::class])
 interface ApplicationComponent {
 
     fun inject(mainActivity: MainActivity)
