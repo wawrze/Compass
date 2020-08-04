@@ -10,8 +10,6 @@ import org.junit.Rule
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito
-import pl.wawra.compass.base.BaseViewModel
-import pl.wawra.compass.testsDI.AppTestComponent
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
@@ -19,12 +17,6 @@ import java.util.concurrent.TimeUnit
 abstract class BaseTestSuite {
 
     init {
-        val appComponent = AppTestComponent.applicationComponent
-        BaseViewModel.setAppComponent(appComponent)
-
-        @Suppress("LeakingThis")
-        appComponent?.inject(this)
-
         val immediate = object : Scheduler() {
             override fun scheduleDirect(run: Runnable, delay: Long, unit: TimeUnit): Disposable {
                 return super.scheduleDirect(run, 0, unit)

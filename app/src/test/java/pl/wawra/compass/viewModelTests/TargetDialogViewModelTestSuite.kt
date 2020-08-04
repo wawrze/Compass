@@ -4,14 +4,16 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 import pl.wawra.compass.BaseTestSuite
 import pl.wawra.compass.R
+import pl.wawra.compass.database.daos.LocationDao
 import pl.wawra.compass.presentation.targetDialog.TargetDialogViewModel
 
 class TargetDialogViewModelTestSuite : BaseTestSuite() {
 
-    private val objectUnderTest = TargetDialogViewModel()
+    private val objectUnderTest = TargetDialogViewModel(mock(LocationDao::class.java))
 
     @Test
     fun shouldGetPreviousLatitudes() {
@@ -23,7 +25,7 @@ class TargetDialogViewModelTestSuite : BaseTestSuite() {
             add(44.444444)
             add(55.555555)
         }
-        Mockito.`when`(objectUnderTest.locationDao.getLatitudes())
+        `when`(objectUnderTest.locationDao.getLatitudes())
             .thenReturn(Observable.just(latitudes))
         // when
         val resultMutable = objectUnderTest.getPreviousLatitudes()
@@ -41,7 +43,7 @@ class TargetDialogViewModelTestSuite : BaseTestSuite() {
     fun shouldGetPreviousLatitudesEmptyList() {
         // given
         val latitudes = ArrayList<Double>()
-        Mockito.`when`(objectUnderTest.locationDao.getLatitudes())
+        `when`(objectUnderTest.locationDao.getLatitudes())
             .thenReturn(Observable.just(latitudes))
         // when
         val resultMutable = objectUnderTest.getPreviousLatitudes()
@@ -60,7 +62,7 @@ class TargetDialogViewModelTestSuite : BaseTestSuite() {
             add(44.444444)
             add(55.555555)
         }
-        Mockito.`when`(objectUnderTest.locationDao.getLongitudes())
+        `when`(objectUnderTest.locationDao.getLongitudes())
             .thenReturn(Observable.just(longitudes))
         // when
         val resultMutable = objectUnderTest.getPreviousLongitudes()
@@ -78,7 +80,7 @@ class TargetDialogViewModelTestSuite : BaseTestSuite() {
     fun shouldGetPreviousLongitudesEmptyList() {
         // given
         val longitudes = ArrayList<Double>()
-        Mockito.`when`(objectUnderTest.locationDao.getLongitudes())
+        `when`(objectUnderTest.locationDao.getLongitudes())
             .thenReturn(Observable.just(longitudes))
         // when
         val resultMutable = objectUnderTest.getPreviousLongitudes()
@@ -190,13 +192,13 @@ class TargetDialogViewModelTestSuite : BaseTestSuite() {
         // given
         val newLatitude = "0.0"
         val newLongitude = "0.0"
-        Mockito.`when`(objectUnderTest.locationDao.changeLatitudesToInactive())
+        `when`(objectUnderTest.locationDao.changeLatitudesToInactive())
             .thenReturn(Maybe.just(0))
-        Mockito.`when`(objectUnderTest.locationDao.insertLatitude(any()))
+        `when`(objectUnderTest.locationDao.insertLatitude(any()))
             .thenReturn(Maybe.just(1L))
-        Mockito.`when`(objectUnderTest.locationDao.changeLongitudesToInactive())
+        `when`(objectUnderTest.locationDao.changeLongitudesToInactive())
             .thenReturn(Maybe.just(0))
-        Mockito.`when`(objectUnderTest.locationDao.insertLongitude(any()))
+        `when`(objectUnderTest.locationDao.insertLongitude(any()))
             .thenReturn(Maybe.just(1L))
         // when
         val resultMutable = objectUnderTest.insertNewTarget(newLatitude, newLongitude)
@@ -210,13 +212,13 @@ class TargetDialogViewModelTestSuite : BaseTestSuite() {
         // given
         val newLatitude = "0.0"
         val newLongitude = "0.0"
-        Mockito.`when`(objectUnderTest.locationDao.changeLatitudesToInactive())
+        `when`(objectUnderTest.locationDao.changeLatitudesToInactive())
             .thenReturn(Maybe.just(0))
-        Mockito.`when`(objectUnderTest.locationDao.insertLatitude(any()))
+        `when`(objectUnderTest.locationDao.insertLatitude(any()))
             .thenReturn(Maybe.just(1L))
-        Mockito.`when`(objectUnderTest.locationDao.changeLongitudesToInactive())
+        `when`(objectUnderTest.locationDao.changeLongitudesToInactive())
             .thenReturn(Maybe.just(0))
-        Mockito.`when`(objectUnderTest.locationDao.insertLongitude(any()))
+        `when`(objectUnderTest.locationDao.insertLongitude(any()))
             .thenReturn(Maybe.just(1L))
         // when
         val resultMutable = objectUnderTest.insertNewTarget(newLatitude, newLongitude)
@@ -230,13 +232,13 @@ class TargetDialogViewModelTestSuite : BaseTestSuite() {
         // given
         val newLatitude = "abc"
         val newLongitude = "0.0"
-        Mockito.`when`(objectUnderTest.locationDao.changeLatitudesToInactive())
+        `when`(objectUnderTest.locationDao.changeLatitudesToInactive())
             .thenReturn(Maybe.just(0))
-        Mockito.`when`(objectUnderTest.locationDao.insertLatitude(any()))
+        `when`(objectUnderTest.locationDao.insertLatitude(any()))
             .thenReturn(Maybe.just(1L))
-        Mockito.`when`(objectUnderTest.locationDao.changeLongitudesToInactive())
+        `when`(objectUnderTest.locationDao.changeLongitudesToInactive())
             .thenReturn(Maybe.just(0))
-        Mockito.`when`(objectUnderTest.locationDao.insertLongitude(any()))
+        `when`(objectUnderTest.locationDao.insertLongitude(any()))
             .thenReturn(Maybe.just(1L))
         // when
         val resultMutable = objectUnderTest.insertNewTarget(newLatitude, newLongitude)
@@ -250,13 +252,13 @@ class TargetDialogViewModelTestSuite : BaseTestSuite() {
         // given
         val newLatitude = "0.0"
         val newLongitude = "abc"
-        Mockito.`when`(objectUnderTest.locationDao.changeLatitudesToInactive())
+        `when`(objectUnderTest.locationDao.changeLatitudesToInactive())
             .thenReturn(Maybe.just(0))
-        Mockito.`when`(objectUnderTest.locationDao.insertLatitude(any()))
+        `when`(objectUnderTest.locationDao.insertLatitude(any()))
             .thenReturn(Maybe.just(1L))
-        Mockito.`when`(objectUnderTest.locationDao.changeLongitudesToInactive())
+        `when`(objectUnderTest.locationDao.changeLongitudesToInactive())
             .thenReturn(Maybe.just(0))
-        Mockito.`when`(objectUnderTest.locationDao.insertLongitude(any()))
+        `when`(objectUnderTest.locationDao.insertLongitude(any()))
             .thenReturn(Maybe.just(1L))
         // when
         val resultMutable = objectUnderTest.insertNewTarget(newLatitude, newLongitude)
@@ -270,13 +272,13 @@ class TargetDialogViewModelTestSuite : BaseTestSuite() {
         // given
         val newLatitude = "0.0"
         val newLongitude = "0.0"
-        Mockito.`when`(objectUnderTest.locationDao.changeLatitudesToInactive())
+        `when`(objectUnderTest.locationDao.changeLatitudesToInactive())
             .thenReturn(Maybe.just(0))
-        Mockito.`when`(objectUnderTest.locationDao.insertLatitude(any()))
+        `when`(objectUnderTest.locationDao.insertLatitude(any()))
             .thenReturn(Maybe.just(0L))
-        Mockito.`when`(objectUnderTest.locationDao.changeLongitudesToInactive())
+        `when`(objectUnderTest.locationDao.changeLongitudesToInactive())
             .thenReturn(Maybe.just(0))
-        Mockito.`when`(objectUnderTest.locationDao.insertLongitude(any()))
+        `when`(objectUnderTest.locationDao.insertLongitude(any()))
             .thenReturn(Maybe.just(1L))
         // when
         val resultMutable = objectUnderTest.insertNewTarget(newLatitude, newLongitude)
@@ -290,13 +292,13 @@ class TargetDialogViewModelTestSuite : BaseTestSuite() {
         // given
         val newLatitude = "0.0"
         val newLongitude = "0.0"
-        Mockito.`when`(objectUnderTest.locationDao.changeLatitudesToInactive())
+        `when`(objectUnderTest.locationDao.changeLatitudesToInactive())
             .thenReturn(Maybe.just(0))
-        Mockito.`when`(objectUnderTest.locationDao.insertLatitude(any()))
+        `when`(objectUnderTest.locationDao.insertLatitude(any()))
             .thenReturn(Maybe.just(1L))
-        Mockito.`when`(objectUnderTest.locationDao.changeLongitudesToInactive())
+        `when`(objectUnderTest.locationDao.changeLongitudesToInactive())
             .thenReturn(Maybe.just(0))
-        Mockito.`when`(objectUnderTest.locationDao.insertLongitude(any()))
+        `when`(objectUnderTest.locationDao.insertLongitude(any()))
             .thenReturn(Maybe.just(0L))
         // when
         val resultMutable = objectUnderTest.insertNewTarget(newLatitude, newLongitude)
