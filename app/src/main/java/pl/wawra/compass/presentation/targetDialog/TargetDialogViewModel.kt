@@ -10,10 +10,7 @@ import pl.wawra.compass.database.entities.Latitude
 import pl.wawra.compass.database.entities.Longitude
 import javax.inject.Inject
 
-class TargetDialogViewModel : BaseViewModel() {
-
-    @Inject
-    lateinit var locationDao: LocationDao
+class TargetDialogViewModel @Inject constructor(var locationDao: LocationDao) : BaseViewModel() {
 
     fun insertNewTarget(latitude: String, longitude: String): MutableLiveData<Boolean> {
         val result = MutableLiveData<Boolean>()

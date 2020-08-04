@@ -24,12 +24,16 @@ import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.fragment_compass.*
 import pl.wawra.compass.R
 import pl.wawra.compass.base.BaseFragment
+import pl.wawra.compass.base.ViewModelProviderFactory
 import pl.wawra.compass.models.RotationModel
 import pl.wawra.compass.presentation.MainActivity
 import pl.wawra.compass.presentation.targetDialog.TargetDialogListener
+import javax.inject.Inject
 
 class CompassFragment : BaseFragment(), SensorEventListener, TargetDialogListener {
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProviderFactory
     private lateinit var viewModel: CompassViewModel
     private lateinit var sensorManager: SensorManager
     private lateinit var accelerometer: Sensor
@@ -45,7 +49,7 @@ class CompassFragment : BaseFragment(), SensorEventListener, TargetDialogListene
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = ViewModelProvider(this).get(CompassViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(CompassViewModel::class.java)
         return inflater.inflate(R.layout.fragment_compass, container, false)
     }
 

@@ -17,16 +17,11 @@ import pl.wawra.compass.models.RotationModel
 import javax.inject.Inject
 
 
-class CompassViewModel : BaseViewModel() {
-
-    @Inject
-    lateinit var locationDao: LocationDao
-
-    @Inject
-    lateinit var geocoder: Geocoder
-
-    @Inject
-    lateinit var rotationCalculator: RotationCalculator
+class CompassViewModel @Inject constructor(
+    var locationDao: LocationDao,
+    var geocoder: Geocoder,
+    var rotationCalculator: RotationCalculator
+) : BaseViewModel() {
 
     val compassRotation = MutableLiveData<RotationModel>()
     val targetMarkerRotation = MutableLiveData<RotationModel>()

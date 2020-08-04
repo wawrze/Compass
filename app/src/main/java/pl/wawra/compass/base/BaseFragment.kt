@@ -2,12 +2,12 @@ package pl.wawra.compass.base
 
 import android.widget.Toast
 import androidx.annotation.MainThread
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import dagger.android.support.DaggerFragment
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment : DaggerFragment() {
 
     protected var navigate: NavController? = null
 

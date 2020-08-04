@@ -19,11 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import kotlin.Pair;
 import pl.wawra.compass.R;
 import pl.wawra.compass.base.BaseDialog;
+import pl.wawra.compass.base.ViewModelProviderFactory;
 
 public class TargetDialog extends BaseDialog {
+
+    @Inject
+    ViewModelProviderFactory viewModelFactory;
 
     private TargetDialogListener targetDialogListener;
     private TargetDialogViewModel viewModel;
@@ -70,7 +76,7 @@ public class TargetDialog extends BaseDialog {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewModelProvider viewModelProvider = new ViewModelProvider(this);
+        ViewModelProvider viewModelProvider = new ViewModelProvider(this, viewModelFactory);
         viewModel = viewModelProvider.get(TargetDialogViewModel.class);
         Context context = getContext();
         if (context != null) {

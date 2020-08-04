@@ -1,25 +1,34 @@
 package pl.wawra.compass.di.components
 
+import dagger.BindsInstance
 import dagger.Component
+import dagger.android.AndroidInjector
+import dagger.android.support.AndroidSupportInjectionModule
 import pl.wawra.compass.App
-import pl.wawra.compass.di.modules.DatabaseModule
-import pl.wawra.compass.di.modules.GeocoderModule
-import pl.wawra.compass.di.modules.HelpersModule
-import pl.wawra.compass.presentation.MainActivity
-import pl.wawra.compass.presentation.compass.CompassViewModel
-import pl.wawra.compass.presentation.targetDialog.TargetDialogViewModel
+import pl.wawra.compass.di.modules.*
+import pl.wawra.compass.di.scopes.AppScoped
 
-@Component(modules = [DatabaseModule::class, GeocoderModule::class, HelpersModule::class])
-interface ApplicationComponent {
+@AppScoped
+@Component(
+    modules = [
+        AndroidSupportInjectionModule::class,
+        DatabaseModule::class,
+        FragmentBuilderModule::class,
+        GeocoderModule::class,
+        HelpersModule::class,
+        ViewModelFactoryModule::class
+    ]
+)
+interface ApplicationComponent : AndroidInjector<App> {
 
-    fun inject(mainActivity: MainActivity)
-    fun inject(app: App)
-    fun inject(compassViewModel: CompassViewModel)
-    fun inject(targetDialogViewModel: TargetDialogViewModel)
+    @Component.Builder
+    interface Builder {
 
-    /* TODO: improve (e.g. constructor injection in view models)
-        https://github.com/android/architecture-samples/tree/dagger-android
-        https://www.youtube.com/watch?v=9fn5s8_CYJI
-     */
+        @BindsInstance
+        fun application(application: App): Builder
+
+        fun build(): ApplicationComponent
+
+    }
 
 }

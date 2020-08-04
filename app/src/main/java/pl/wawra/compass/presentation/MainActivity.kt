@@ -11,7 +11,6 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
-import pl.wawra.compass.App
 import pl.wawra.compass.R
 import pl.wawra.compass.base.Navigation
 import pl.wawra.compass.presentation.targetDialog.TargetDialogListener
@@ -20,7 +19,6 @@ class MainActivity : AppCompatActivity(), TargetDialogListener, Navigation {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as App).appComponent?.inject(this)
         setContentView(R.layout.activity_main)
 
         askForPermissionIfNeeded()

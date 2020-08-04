@@ -8,10 +8,10 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
-import androidx.fragment.app.DialogFragment
+import dagger.android.support.DaggerDialogFragment
 import pl.wawra.compass.R
 
-abstract class BaseDialog : DialogFragment() {
+abstract class BaseDialog : DaggerDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
