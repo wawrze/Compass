@@ -96,8 +96,8 @@ class CompassViewModel : BaseViewModel() {
 
     private fun calculateRotations(newDegree: Float) {
         Observable.fromCallable {
-                rotationCalculator.calculateRotations(newDegree, targetLocation, lastLocation)
-            }.observeOn(AndroidSchedulers.mainThread())
+            rotationCalculator.calculateRotations(newDegree, targetLocation, lastLocation)
+        }.observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(
                 { rotations ->

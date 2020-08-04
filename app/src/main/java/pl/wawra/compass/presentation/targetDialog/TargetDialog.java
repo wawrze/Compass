@@ -36,6 +36,36 @@ public class TargetDialog extends BaseDialog {
     private TextView longitudeInputError;
     private Button cancelButton;
     private Button confirmButton;
+    private View.OnClickListener cancelButtonObserver = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            dismissAllowingStateLoss();
+        }
+    };
+    private View.OnClickListener confirmButtonObserver = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final String latitude = latitudeInput.getText().toString();
+            final String longitude = longitudeInput.getText().toString();
+            viewModel.verifyTarget(latitude, longitude).observe(
+                    getViewLifecycleOwner(),
+                    new VerifyTargetObserver(latitude, longitude)
+            );
+        }
+    };
+    private Observer<Boolean> insertNewTargetObserver = new Observer<Boolean>() {
+        @Override
+        public void onChanged(Boolean isSuccess) {
+            if (isSuccess) {
+                showToast(R.string.new_target_set);
+                if (targetDialogListener != null) targetDialogListener.onNewLongitude();
+
+                dismissAllowingStateLoss();
+            } else {
+                showToast(R.string.unknown_error);
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -49,13 +79,6 @@ public class TargetDialog extends BaseDialog {
         }
         return inflater.inflate(R.layout.dialog_target, container, false);
     }
-
-    private View.OnClickListener cancelButtonObserver = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            dismissAllowingStateLoss();
-        }
-    };
 
     @Override
     public void onResume() {
@@ -115,31 +138,6 @@ public class TargetDialog extends BaseDialog {
                 }
         );
     }
-
-    private View.OnClickListener confirmButtonObserver = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            final String latitude = latitudeInput.getText().toString();
-            final String longitude = longitudeInput.getText().toString();
-            viewModel.verifyTarget(latitude, longitude).observe(
-                    getViewLifecycleOwner(),
-                    new VerifyTargetObserver(latitude, longitude)
-            );
-        }
-    };
-    private Observer<Boolean> insertNewTargetObserver = new Observer<Boolean>() {
-        @Override
-        public void onChanged(Boolean isSuccess) {
-            if (isSuccess) {
-                showToast(R.string.new_target_set);
-                if (targetDialogListener != null) targetDialogListener.onNewLongitude();
-
-                dismissAllowingStateLoss();
-            } else {
-                showToast(R.string.unknown_error);
-            }
-        }
-    };
 
     @Override
     public void onAttach(@NonNull Context context) {

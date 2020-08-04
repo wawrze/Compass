@@ -6,45 +6,45 @@
     android:layout_height="match_parent"
     android:background="@color/light_grey">
 
-        <TextView
-            android:id="@+id/fragment_compass_current_target_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/current_target"
-            android:textColor="@color/orange"
-            android:layout_margin="@dimen/margin_large"
-            android:visibility="invisible"
-            tools:visibility="visible"
-            app:layout_constraintEnd_toStartOf="@id/fragment_compass_current_target"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/fragment_compass_current_target_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_large"
+        android:text="@string/current_target"
+        android:textColor="@color/orange"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@id/fragment_compass_current_target"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
-        <TextView
-            android:id="@+id/fragment_compass_current_target"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:singleLine="true"
-            android:textColor="@color/orange"
-            android:visibility="invisible"
-            app:layout_constraintTop_toTopOf="@id/fragment_compass_current_target_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/fragment_compass_current_target_label"
-            tools:visibility="visible"
-            tools:text="53.000000, 26.000000" />
+    <TextView
+        android:id="@+id/fragment_compass_current_target"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:singleLine="true"
+        android:textColor="@color/orange"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/fragment_compass_current_target_label"
+        app:layout_constraintTop_toTopOf="@id/fragment_compass_current_target_label"
+        tools:text="53.000000, 26.000000"
+        tools:visibility="visible" />
 
-        <TextView
-            android:id="@+id/fragment_compass_current_target_address"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:minLines="2"
-            android:textColor="@color/orange"
-            android:visibility="invisible"
-            tools:visibility="visible"
-            app:layout_constraintEnd_toEndOf="@id/fragment_compass_current_target"
-            app:layout_constraintStart_toStartOf="@id/fragment_compass_current_target"
-            app:layout_constraintTop_toBottomOf="@id/fragment_compass_current_target"
-            tools:text="Address, zip code, City, etc." />
+    <TextView
+        android:id="@+id/fragment_compass_current_target_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minLines="2"
+        android:textColor="@color/orange"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@id/fragment_compass_current_target"
+        app:layout_constraintStart_toStartOf="@id/fragment_compass_current_target"
+        app:layout_constraintTop_toBottomOf="@id/fragment_compass_current_target"
+        tools:text="Address, zip code, City, etc."
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/fragment_compass_compass_image"
