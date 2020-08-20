@@ -9,8 +9,6 @@ import io.reactivex.plugins.RxJavaPlugins
 import org.junit.Rule
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.mockito.Mockito
-import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
 @RunWith(JUnit4::class)
@@ -23,7 +21,7 @@ abstract class BaseTestSuite {
             }
 
             override fun createWorker(): Worker {
-                return ExecutorScheduler.ExecutorWorker(Executor { it.run() }, false)
+                return ExecutorScheduler.ExecutorWorker({ it.run() }, false)
             }
         }
         RxJavaPlugins.setInitIoSchedulerHandler { immediate }
@@ -35,11 +33,5 @@ abstract class BaseTestSuite {
 
     @get:Rule
     val taskExecutorRule = InstantTaskExecutorRule()
-
-    @Suppress("UNCHECKED_CAST")
-    fun <T> any(): T {
-        Mockito.any<T>()
-        return null as T
-    }
 
 }

@@ -5,6 +5,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorManager
 import android.location.Address
 import android.location.Geocoder
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -23,10 +24,19 @@ class CompassViewModel @Inject constructor(
     var rotationCalculator: RotationCalculator
 ) : BaseViewModel() {
 
-    val compassRotation = MutableLiveData<RotationModel>()
-    val targetMarkerRotation = MutableLiveData<RotationModel>()
-    val targetLocationString = MutableLiveData<String>()
-    val targetAddressString = MutableLiveData<String>()
+    private val mCompassRotation = MutableLiveData<RotationModel>()
+    private val mTargetMarkerRotation = MutableLiveData<RotationModel>()
+    private val mTargetLocationString = MutableLiveData<String>()
+    private val mTargetAddressString = MutableLiveData<String>()
+
+    val compassRotation: LiveData<RotationModel>
+        get() = mCompassRotation
+    val targetMarkerRotation: LiveData<RotationModel>
+        get() = mTargetMarkerRotation
+    val targetLocationString: LiveData<String>
+        get() = mTargetLocationString
+    val targetAddressString: LiveData<String>
+        get() = mTargetAddressString
 
     private var targetLocation: Location? = null
     private val lastLocation = Location(0.0, 0.0)
@@ -44,7 +54,7 @@ class CompassViewModel @Inject constructor(
         }
 
     fun updateTargetLocation() {
-        targetLocation ?: targetLocationString.postValue("")
+        targetLocation ?: mTargetLocationString.postValue("")
 
         locationRepository.getTargetLocation()
             .observeOn(AndroidSchedulers.mainThread())
@@ -52,9 +62,9 @@ class CompassViewModel @Inject constructor(
             .subscribe {
                 it?.let {
                     targetLocation = it
-                    targetLocationString.postValue("${it.lat}, ${it.lon}")
+                    mTargetLocationString.postValue("${it.lat}, ${it.lon}")
                     getTargetAddress(it.lat, it.lon)
-                } ?: targetLocationString.postValue("")
+                } ?: mTargetLocationString.postValue("")
             }.addToDisposables()
     }
 
@@ -96,8 +106,8 @@ class CompassViewModel @Inject constructor(
             .subscribeOn(Schedulers.io())
             .subscribe(
                 { rotations ->
-                    rotations.first?.let { compassRotation.postValue(it) }
-                    rotations.second?.let { targetMarkerRotation.postValue(it) }
+                    rotations.first?.let { mCompassRotation.postValue(it) }
+                    rotations.second?.let { mTargetMarkerRotation.postValue(it) }
                 },
                 {}
             )
@@ -121,7 +131,7 @@ class CompassViewModel @Inject constructor(
                     if (it.isNotEmpty()) {
                         updateTargetAddress(it)
                     } else {
-                        targetAddressString.postValue("")
+                        mTargetAddressString.postValue("")
                     }
                 },
                 {}
@@ -138,7 +148,7 @@ class CompassViewModel @Inject constructor(
                 addressStringBuilder.append(address.getAddressLine(i))
             }
         }
-        targetAddressString.postValue(addressStringBuilder.toString())
+        mTargetAddressString.postValue(addressStringBuilder.toString())
     }
 
 }

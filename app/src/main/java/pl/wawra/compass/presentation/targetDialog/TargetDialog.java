@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -28,38 +27,16 @@ import pl.wawra.compass.base.ViewModelProviderFactory;
 
 public class TargetDialog extends BaseDialog {
 
-    @Inject
-    ViewModelProviderFactory viewModelFactory;
-
-    private TargetDialogListener targetDialogListener;
-    private TargetDialogViewModel viewModel;
-    private ArrayAdapter<String> longitudeAdapter;
-    private ArrayAdapter<String> latitudeAdapter;
-
-    private AutoCompleteTextView latitudeInput;
-    private AutoCompleteTextView longitudeInput;
-    private TextView latitudeInputError;
-    private TextView longitudeInputError;
-    private Button cancelButton;
-    private Button confirmButton;
-    private View.OnClickListener cancelButtonObserver = new View.OnClickListener() {
+    private final View.OnClickListener cancelButtonObserver = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             dismissAllowingStateLoss();
         }
     };
-    private View.OnClickListener confirmButtonObserver = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            final String latitude = latitudeInput.getText().toString();
-            final String longitude = longitudeInput.getText().toString();
-            viewModel.verifyTarget(latitude, longitude).observe(
-                    getViewLifecycleOwner(),
-                    new VerifyTargetObserver(latitude, longitude)
-            );
-        }
-    };
-    private Observer<Boolean> insertNewTargetObserver = new Observer<Boolean>() {
+    @Inject
+    ViewModelProviderFactory viewModelFactory;
+    private TargetDialogListener targetDialogListener;
+    private final Observer<Boolean> insertNewTargetObserver = new Observer<Boolean>() {
         @Override
         public void onChanged(Boolean isSuccess) {
             if (isSuccess) {
@@ -72,6 +49,26 @@ public class TargetDialog extends BaseDialog {
             }
         }
     };
+    private TargetDialogViewModel viewModel;
+    private ArrayAdapter<String> longitudeAdapter;
+    private ArrayAdapter<String> latitudeAdapter;
+    private AutoCompleteTextView latitudeInput;
+    private AutoCompleteTextView longitudeInput;
+    private final View.OnClickListener confirmButtonObserver = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final String latitude = latitudeInput.getText().toString();
+            final String longitude = longitudeInput.getText().toString();
+            viewModel.verifyTarget(latitude, longitude).observe(
+                    getViewLifecycleOwner(),
+                    new VerifyTargetObserver(latitude, longitude)
+            );
+        }
+    };
+    private TextView latitudeInputError;
+    private TextView longitudeInputError;
+    private Button cancelButton;
+    private Button confirmButton;
 
     @Nullable
     @Override
@@ -113,12 +110,12 @@ public class TargetDialog extends BaseDialog {
     }
 
     private void bindViewElements() {
-        latitudeInput = Objects.requireNonNull(getView()).findViewById(R.id.dialog_target_latitude_input);
-        longitudeInput = Objects.requireNonNull(getView()).findViewById(R.id.dialog_target_longitude_input);
-        latitudeInputError = Objects.requireNonNull(getView()).findViewById(R.id.dialog_target_latitude_input_error_message);
-        longitudeInputError = Objects.requireNonNull(getView()).findViewById(R.id.dialog_target_longitude_input_error_message);
-        cancelButton = Objects.requireNonNull(getView()).findViewById(R.id.dialog_target_cancel_button);
-        confirmButton = Objects.requireNonNull(getView()).findViewById(R.id.dialog_target_confirm_button);
+        latitudeInput = requireView().findViewById(R.id.dialog_target_latitude_input);
+        longitudeInput = requireView().findViewById(R.id.dialog_target_longitude_input);
+        latitudeInputError = requireView().findViewById(R.id.dialog_target_latitude_input_error_message);
+        longitudeInputError = requireView().findViewById(R.id.dialog_target_longitude_input_error_message);
+        cancelButton = requireView().findViewById(R.id.dialog_target_cancel_button);
+        confirmButton = requireView().findViewById(R.id.dialog_target_confirm_button);
     }
 
     private void setupInputs() {

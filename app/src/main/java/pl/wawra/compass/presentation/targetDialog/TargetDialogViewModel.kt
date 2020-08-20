@@ -1,5 +1,6 @@
 package pl.wawra.compass.presentation.targetDialog
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -13,7 +14,7 @@ import javax.inject.Inject
 class TargetDialogViewModel @Inject constructor(var locationRepository: LocationRepository) :
     BaseViewModel() {
 
-    fun insertNewTarget(latitude: String, longitude: String): MutableLiveData<Boolean> {
+    fun insertNewTarget(latitude: String, longitude: String): LiveData<Boolean> {
         val result = MutableLiveData<Boolean>()
 
         val latitudeToInsert = createLatitude(latitude) ?: return result.apply { value = false }
@@ -57,7 +58,7 @@ class TargetDialogViewModel @Inject constructor(var locationRepository: Location
         }
     }
 
-    fun verifyTarget(latitude: String, longitude: String): MutableLiveData<Pair<Int, Int>> {
+    fun verifyTarget(latitude: String, longitude: String): LiveData<Pair<Int, Int>> {
         val result = MutableLiveData<Pair<Int, Int>>()
 
         val latitudeVerifyResult = verifyLatitude(latitude)
@@ -89,7 +90,7 @@ class TargetDialogViewModel @Inject constructor(var locationRepository: Location
         R.string.incorrect_latitude
     }
 
-    fun getPreviousLongitudes(): MutableLiveData<List<String>> {
+    fun getPreviousLongitudes(): LiveData<List<String>> {
         val result = MutableLiveData<List<String>>()
 
         locationRepository.getLongitudes()
@@ -102,7 +103,7 @@ class TargetDialogViewModel @Inject constructor(var locationRepository: Location
         return result
     }
 
-    fun getPreviousLatitudes(): MutableLiveData<List<String>> {
+    fun getPreviousLatitudes(): LiveData<List<String>> {
         val result = MutableLiveData<List<String>>()
 
         locationRepository.getLatitudes()

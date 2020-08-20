@@ -2,8 +2,7 @@ package pl.wawra.compass.base
 
 import android.widget.Toast
 import androidx.annotation.MainThread
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import dagger.android.support.DaggerFragment
 
@@ -22,10 +21,10 @@ abstract class BaseFragment : DaggerFragment() {
     }
 
     @MainThread
-    protected fun <T> MutableLiveData<T>.observe(action: (T) -> Unit) {
+    protected fun <T> LiveData<T>.observe(action: (T) -> Unit) {
         this.observe(
             this@BaseFragment.viewLifecycleOwner,
-            Observer { action.invoke(it) }
+            { action.invoke(it) }
         )
     }
 
