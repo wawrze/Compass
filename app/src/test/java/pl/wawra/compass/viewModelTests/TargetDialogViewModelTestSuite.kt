@@ -8,7 +8,6 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import pl.wawra.compass.BaseTestSuite
 import pl.wawra.compass.R
-import pl.wawra.compass.database.daos.LocationDao
 import pl.wawra.compass.presentation.targetDialog.TargetDialogViewModel
 import pl.wawra.compass.repositories.LocationRepository
 

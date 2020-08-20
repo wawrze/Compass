@@ -12,61 +12,107 @@ class RotationCalculator {
     private var lastCompassDegree: Float = 0.0F
     private var lastTargetMarkerDegree: Float = 0.0F
 
-    // TODO: try to split to few functions
     fun calculateRotations(
         newDegree: Float,
         targetLocation: Location?,
         lastLocation: Location
     ): Pair<RotationModel?, RotationModel?> {
-        val timestamp = System.currentTimeMillis()
-        if (lastCompassUpdate != 0L && timestamp - lastCompassUpdate < lastAnimationLength) return Pair(
-            null,
-            null
-        )
-        lastCompassUpdate = timestamp
+        if (!isAnimationFinished()) return Pair(null, null)
 
         val calculatedDegree = (-Math.toDegrees(newDegree.toDouble()) + 360).toFloat() % 360
 
         val change = abs(calculatedDegree - lastCompassDegree)
         if (change < 10.0) return Pair(null, null)
 
-        var toDegree = calculatedDegree
-        var fromDegree = lastCompassDegree
-        if (change > 180) {
-            if (lastCompassDegree > calculatedDegree) {
-                toDegree += 360
-            } else {
-                fromDegree += 360
-            }
-        }
+        val toDegree = calculateToDegree(calculatedDegree, change)
+        val fromDegree = calculateFromDegree(calculatedDegree, change)
+        val animationLength = calculateAnimationLength(fromDegree, toDegree)
 
-        var animationLength = abs(toDegree - fromDegree).toLong() * 10
-        if (animationLength < 100) animationLength = 100
-
-        lastCompassDegree = calculatedDegree
-        lastAnimationLength = animationLength
-        val compassRotation = RotationModel(
+        val compassRotation = calculateCompassRotation(
             fromDegree,
             toDegree,
+            calculatedDegree,
             animationLength
         )
 
-        targetLocation ?: return Pair(compassRotation, null)
+        val targetMarkerRotation = calculateTargetMarkerRotation(
+            targetLocation,
+            lastLocation,
+            calculatedDegree,
+            animationLength
+        )
+
+        return Pair(compassRotation, targetMarkerRotation)
+    }
+
+    private fun calculateToDegree(calculatedDegree: Float, change: Float): Float =
+        if (change > 180 && lastCompassDegree > calculatedDegree) {
+            calculatedDegree + 360
+        } else {
+            calculatedDegree
+        }
+
+    private fun calculateFromDegree(calculatedDegree: Float, change: Float): Float =
+        if (change > 180 && lastCompassDegree <= calculatedDegree) {
+            lastCompassDegree + 360
+        } else {
+            lastCompassDegree
+        }
+
+    private fun calculateAnimationLength(fromDegree: Float, toDegree: Float): Long {
+        var animationLength = abs(toDegree - fromDegree).toLong() * 10
+        if (animationLength < 100) animationLength = 100
+        return animationLength
+    }
+
+    private fun calculateTargetMarkerRotation(
+        targetLocation: Location?,
+        lastLocation: Location,
+        calculatedDegree: Float,
+        animationLength: Long
+    ): RotationModel? {
+        targetLocation ?: return null
+
         val targetDegreeFromNorth = calculateTargetDegree(
             targetLocation.lat,
             targetLocation.lon,
             lastLocation.lat,
             lastLocation.lon
         )
-        toDegree = (calculatedDegree + targetDegreeFromNorth) % 360
+        val toDegree = (calculatedDegree + targetDegreeFromNorth) % 360
         lastTargetMarkerDegree = toDegree % 360
-        val targetMarkerRotation = RotationModel(
+
+        return RotationModel(
             lastTargetMarkerDegree,
             toDegree,
             animationLength
         )
+    }
 
-        return Pair(compassRotation, targetMarkerRotation)
+    private fun calculateCompassRotation(
+        fromDegree: Float,
+        toDegree: Float,
+        calculatedDegree: Float,
+        animationLength: Long
+    ): RotationModel {
+        lastCompassDegree = calculatedDegree
+        lastAnimationLength = animationLength
+
+        return RotationModel(
+            fromDegree,
+            toDegree,
+            animationLength
+        )
+    }
+
+    private fun isAnimationFinished(): Boolean {
+        val timestamp = System.currentTimeMillis()
+        return if (lastCompassUpdate != 0L && timestamp - lastCompassUpdate < lastAnimationLength) {
+            false
+        } else {
+            lastCompassUpdate = timestamp
+            true
+        }
     }
 
     private fun calculateTargetDegree(

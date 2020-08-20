@@ -5,7 +5,6 @@ import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mockito.mock
 import pl.wawra.compass.BaseTestSuite
-import pl.wawra.compass.database.daos.LocationDao
 import pl.wawra.compass.helpers.RotationCalculator
 import pl.wawra.compass.presentation.compass.CompassViewModel
 import pl.wawra.compass.repositories.LocationRepository

@@ -10,7 +10,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import pl.wawra.compass.base.BaseViewModel
-import pl.wawra.compass.database.daos.LocationDao
 import pl.wawra.compass.helpers.RotationCalculator
 import pl.wawra.compass.models.Location
 import pl.wawra.compass.models.RotationModel

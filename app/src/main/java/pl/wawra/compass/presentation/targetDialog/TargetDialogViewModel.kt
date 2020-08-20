@@ -5,13 +5,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import pl.wawra.compass.R
 import pl.wawra.compass.base.BaseViewModel
-import pl.wawra.compass.database.daos.LocationDao
 import pl.wawra.compass.database.entities.Latitude
 import pl.wawra.compass.database.entities.Longitude
 import pl.wawra.compass.repositories.LocationRepository
 import javax.inject.Inject
 
-class TargetDialogViewModel @Inject constructor(var locationRepository: LocationRepository) : BaseViewModel() {
+class TargetDialogViewModel @Inject constructor(var locationRepository: LocationRepository) :
+    BaseViewModel() {
 
     fun insertNewTarget(latitude: String, longitude: String): MutableLiveData<Boolean> {
         val result = MutableLiveData<Boolean>()
