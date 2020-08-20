@@ -14,8 +14,8 @@ import pl.wawra.compass.di.scopes.AppScoped
         AndroidSupportInjectionModule::class,
         DatabaseModule::class,
         FragmentBuilderModule::class,
-        GeocoderModule::class,
         HelpersModule::class,
+        RepositoryModule::class,
         ViewModelFactoryModule::class
     ]
 )

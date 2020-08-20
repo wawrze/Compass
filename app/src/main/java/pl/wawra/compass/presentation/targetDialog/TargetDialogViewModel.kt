@@ -8,9 +8,10 @@ import pl.wawra.compass.base.BaseViewModel
 import pl.wawra.compass.database.daos.LocationDao
 import pl.wawra.compass.database.entities.Latitude
 import pl.wawra.compass.database.entities.Longitude
+import pl.wawra.compass.repositories.LocationRepository
 import javax.inject.Inject
 
-class TargetDialogViewModel @Inject constructor(var locationDao: LocationDao) : BaseViewModel() {
+class TargetDialogViewModel @Inject constructor(var locationRepository: LocationRepository) : BaseViewModel() {
 
     fun insertNewTarget(latitude: String, longitude: String): MutableLiveData<Boolean> {
         val result = MutableLiveData<Boolean>()
@@ -18,11 +19,7 @@ class TargetDialogViewModel @Inject constructor(var locationDao: LocationDao) : 
         val latitudeToInsert = createLatitude(latitude) ?: return result.apply { value = false }
         val longitudeToInsert = createLongitude(longitude) ?: return result.apply { value = false }
 
-        locationDao.changeLatitudesToInactive()
-            .flatMap { locationDao.insertLatitude(latitudeToInsert) }
-            .flatMap { if (it < 1) throw Exception() else locationDao.changeLongitudesToInactive() }
-            .flatMap { locationDao.insertLongitude(longitudeToInsert) }
-            .map { if (it < 1) throw Exception() else it }
+        locationRepository.changeLocation(latitudeToInsert, longitudeToInsert)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(
@@ -95,7 +92,7 @@ class TargetDialogViewModel @Inject constructor(var locationDao: LocationDao) : 
     fun getPreviousLongitudes(): MutableLiveData<List<String>> {
         val result = MutableLiveData<List<String>>()
 
-        locationDao.getLongitudes()
+        locationRepository.getLongitudes()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {
@@ -108,7 +105,7 @@ class TargetDialogViewModel @Inject constructor(var locationDao: LocationDao) : 
     fun getPreviousLatitudes(): MutableLiveData<List<String>> {
         val result = MutableLiveData<List<String>>()
 
-        locationDao.getLatitudes()
+        locationRepository.getLatitudes()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {

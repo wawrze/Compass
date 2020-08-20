@@ -8,13 +8,14 @@ import pl.wawra.compass.BaseTestSuite
 import pl.wawra.compass.database.daos.LocationDao
 import pl.wawra.compass.helpers.RotationCalculator
 import pl.wawra.compass.presentation.compass.CompassViewModel
+import pl.wawra.compass.repositories.LocationRepository
 
 class CompassViewModelTestSuite : BaseTestSuite() {
 
     // TODO: CompassViewModel tests
 
     private val objectUnderTest = CompassViewModel(
-        mock(LocationDao::class.java),
+        mock(LocationRepository::class.java),
         mock(Geocoder::class.java),
         mock(RotationCalculator::class.java)
     )

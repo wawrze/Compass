@@ -14,11 +14,12 @@ import pl.wawra.compass.database.daos.LocationDao
 import pl.wawra.compass.helpers.RotationCalculator
 import pl.wawra.compass.models.Location
 import pl.wawra.compass.models.RotationModel
+import pl.wawra.compass.repositories.LocationRepository
 import javax.inject.Inject
 
 
 class CompassViewModel @Inject constructor(
-    var locationDao: LocationDao,
+    var locationRepository: LocationRepository,
     var geocoder: Geocoder,
     var rotationCalculator: RotationCalculator
 ) : BaseViewModel() {
@@ -46,7 +47,7 @@ class CompassViewModel @Inject constructor(
     fun updateTargetLocation() {
         targetLocation ?: targetLocationString.postValue("")
 
-        locationDao.getTargetLocation()
+        locationRepository.getTargetLocation()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {
