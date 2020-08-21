@@ -6,6 +6,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.Maybe
 import io.reactivex.Observable
+import io.reactivex.Single
 import org.junit.Assert.*
 import org.junit.Test
 import pl.wawra.compass.BaseTestSuite
@@ -141,9 +142,9 @@ class LocationRepositoryTestSuite : BaseTestSuite() {
     fun shouldGetTargetLocation() {
         // given
         val location = Location(0.12, 3.14)
-        every { objectUnderTest.locationDao.getTargetLocation() } returns Observable.just(location)
+        every { objectUnderTest.locationDao.getTargetLocation() } returns Single.just(location)
         // when
-        val result = objectUnderTest.getTargetLocation().blockingFirst()
+        val result = objectUnderTest.getTargetLocation().blockingGet()
         // then
         assertEquals(0.12, result?.lat)
         assertEquals(3.14, result?.lon)
@@ -154,12 +155,12 @@ class LocationRepositoryTestSuite : BaseTestSuite() {
         // given
         every {
             objectUnderTest.locationDao.getTargetLocation()
-        } returns Observable.error(EmptyResultSetException(""))
+        } returns Single.error(EmptyResultSetException(""))
         var result: Location? = null
         var error: Exception? = null
         // when
         try {
-            result = objectUnderTest.getTargetLocation().blockingFirst()
+            result = objectUnderTest.getTargetLocation().blockingGet()
         } catch (e: Exception) {
             error = e
         }

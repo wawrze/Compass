@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import io.reactivex.Maybe
 import io.reactivex.Observable
+import io.reactivex.Single
 import pl.wawra.compass.database.entities.Latitude
 import pl.wawra.compass.database.entities.Longitude
 import pl.wawra.compass.models.Location
@@ -53,6 +54,6 @@ interface LocationDao {
         LIMIT 1
     """
     )
-    fun getTargetLocation(): Observable<Location?>
+    fun getTargetLocation(): Single<Location>
 
 }

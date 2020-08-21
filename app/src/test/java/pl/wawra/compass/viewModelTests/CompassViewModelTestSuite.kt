@@ -4,8 +4,9 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorManager
 import android.location.Address
+import androidx.room.EmptyResultSetException
 import io.mockk.*
-import io.reactivex.Observable
+import io.reactivex.Single
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -31,7 +32,7 @@ class CompassViewModelTestSuite : BaseTestSuite() {
         val location = Location(0.1234, 5.6789)
         every {
             objectUnderTest.locationRepository.getTargetLocation()
-        } returns Observable.just(location)
+        } returns Single.just(location)
         every {
             objectUnderTest.geocoder.getFromLocation(0.1234, 5.6789, 1)
         } returns ArrayList()
@@ -47,7 +48,7 @@ class CompassViewModelTestSuite : BaseTestSuite() {
         // given
         every {
             objectUnderTest.locationRepository.getTargetLocation()
-        } returns Observable.never()
+        } returns Single.error(EmptyResultSetException(""))
         // when
         objectUnderTest.updateTargetLocation()
         val result = objectUnderTest.targetLocationString.value
@@ -66,7 +67,7 @@ class CompassViewModelTestSuite : BaseTestSuite() {
         every { address.getAddressLine(2) } returns "address line 2"
         every {
             objectUnderTest.locationRepository.getTargetLocation()
-        } returns Observable.just(location)
+        } returns Single.just(location)
         every {
             objectUnderTest.geocoder.getFromLocation(0.1234, 5.6789, 1)
         } returns listOf(address)

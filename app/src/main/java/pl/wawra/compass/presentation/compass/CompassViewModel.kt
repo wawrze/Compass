@@ -59,13 +59,16 @@ class CompassViewModel @Inject constructor(
         locationRepository.getTargetLocation()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe {
-                it?.let {
+            .subscribe(
+                {
                     targetLocation = it
                     mTargetLocationString.postValue("${it.lat}, ${it.lon}")
                     getTargetAddress(it.lat, it.lon)
-                } ?: mTargetLocationString.postValue("")
-            }.addToDisposables()
+                },
+                {
+                    mTargetLocationString.postValue("")
+                }
+            ).addToDisposables()
     }
 
     fun handleSensorEvent(event: SensorEvent) {
