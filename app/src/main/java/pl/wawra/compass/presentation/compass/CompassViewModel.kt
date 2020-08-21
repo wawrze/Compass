@@ -66,6 +66,7 @@ class CompassViewModel @Inject constructor(
                     getTargetAddress(it.lat, it.lon)
                 },
                 {
+                    it.printStackTrace()
                     mTargetLocationString.postValue("")
                 }
             ).addToDisposables()
@@ -112,7 +113,9 @@ class CompassViewModel @Inject constructor(
                     rotations.first?.let { mCompassRotation.postValue(it) }
                     rotations.second?.let { mTargetMarkerRotation.postValue(it) }
                 },
-                {}
+                {
+                    it.printStackTrace()
+                }
             )
             .addToDisposables()
     }
@@ -138,6 +141,7 @@ class CompassViewModel @Inject constructor(
                     }
                 },
                 {
+                    it.printStackTrace()
                     mTargetAddressString.postValue("")
                 }
             ).addToDisposables()

@@ -25,7 +25,10 @@ class TargetDialogViewModel @Inject constructor(var locationRepository: Location
             .subscribeOn(Schedulers.io())
             .subscribe(
                 { result.postValue(true) },
-                { result.postValue(false) }
+                {
+                    it.printStackTrace()
+                    result.postValue(false)
+                }
             )
             .addToDisposables()
 
@@ -96,9 +99,14 @@ class TargetDialogViewModel @Inject constructor(var locationRepository: Location
         locationRepository.getLongitudes()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe {
-                result.postValue(it.map { value -> value.toString() })
-            }.addToDisposables()
+            .subscribe(
+                {
+                    result.postValue(it.map { value -> value.toString() })
+                },
+                {
+                    it.printStackTrace()
+                }
+            ).addToDisposables()
 
         return result
     }
@@ -109,9 +117,14 @@ class TargetDialogViewModel @Inject constructor(var locationRepository: Location
         locationRepository.getLatitudes()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe {
-                result.postValue(it.map { value -> value.toString() })
-            }.addToDisposables()
+            .subscribe(
+                {
+                    result.postValue(it.map { value -> value.toString() })
+                },
+                {
+                    it.printStackTrace()
+                }
+            ).addToDisposables()
 
         return result
     }

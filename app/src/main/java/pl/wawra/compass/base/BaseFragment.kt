@@ -1,5 +1,6 @@
 package pl.wawra.compass.base
 
+import android.content.Context
 import android.widget.Toast
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
@@ -28,8 +29,8 @@ abstract class BaseFragment : DaggerFragment() {
         )
     }
 
-    fun showToast(res: Int) {
-        Toast.makeText(context, res, Toast.LENGTH_LONG).show()
+    protected fun Context.showToast(res: Int) {
+        Toast.makeText(this, res, Toast.LENGTH_LONG).show()
     }
 
 }

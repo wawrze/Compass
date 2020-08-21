@@ -125,7 +125,7 @@ class CompassFragment : BaseFragment(), SensorEventListener, TargetDialogListene
         } else {
             changeTargetVisibility(false)
             fragment_compass_target_button.setOnClickListener {
-                showToast(R.string.have_to_grant_permission)
+                context?.showToast(R.string.have_to_grant_permission)
             }
         }
     }

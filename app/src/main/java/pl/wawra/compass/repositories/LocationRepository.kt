@@ -10,9 +10,9 @@ class LocationRepository @Inject constructor(var locationDao: LocationDao) {
     fun changeLocation(newLatitude: Latitude, newLongitude: Longitude) =
         locationDao.changeLatitudesToInactive()
             .flatMap { locationDao.insertLatitude(newLatitude) }
-            .flatMap { if (it < 1) throw Exception() else locationDao.changeLongitudesToInactive() }
+            .flatMap { if (it < 1) throw Exception("Insert longitude error!") else locationDao.changeLongitudesToInactive() }
             .flatMap { locationDao.insertLongitude(newLongitude) }
-            .map { if (it < 1) throw Exception() else it }
+            .map { if (it < 1) throw Exception("Insert latitude error!") else it }
 
     fun getLatitudes() = locationDao.getLatitudes()
 
