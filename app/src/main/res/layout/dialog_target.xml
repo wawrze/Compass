@@ -8,13 +8,16 @@
 
     <TextView
         android:id="@+id/dialog_target_latitude_label"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_large"
+        android:maxLines="2"
         android:text="@string/enter_latitude"
+        android:textAlignment="viewEnd"
         android:textColor="@color/dark_grey"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@id/dialog_target_latitude_input"
+        app:layout_constraintEnd_toStartOf="@id/dialog_target_confirm_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/dialog_target_latitude_input" />
 
@@ -42,20 +45,23 @@
         android:textColor="@color/red"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@id/dialog_target_latitude_input"
-        app:layout_constraintStart_toStartOf="@id/dialog_target_latitude_input"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dialog_target_latitude_input"
         tools:text="@string/incorrect_latitude"
         tools:visibility="visible" />
 
     <TextView
         android:id="@+id/dialog_target_longitude_label"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_large"
+        android:maxLines="2"
         android:text="@string/enter_longitude"
+        android:textAlignment="viewEnd"
         android:textColor="@color/dark_grey"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@id/dialog_target_longitude_input"
+        app:layout_constraintEnd_toStartOf="@id/dialog_target_confirm_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/dialog_target_longitude_input" />
 
@@ -83,7 +89,7 @@
         android:textColor="@color/red"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@id/dialog_target_longitude_input"
-        app:layout_constraintStart_toStartOf="@id/dialog_target_longitude_input"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dialog_target_longitude_input"
         tools:text="@string/incorrect_longitude"
         tools:visibility="visible" />

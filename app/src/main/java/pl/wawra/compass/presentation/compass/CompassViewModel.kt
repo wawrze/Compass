@@ -137,7 +137,9 @@ class CompassViewModel @Inject constructor(
                         mTargetAddressString.postValue("")
                     }
                 },
-                {}
+                {
+                    mTargetAddressString.postValue("")
+                }
             ).addToDisposables()
     }
 

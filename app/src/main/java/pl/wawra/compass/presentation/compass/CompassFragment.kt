@@ -1,5 +1,6 @@
 package pl.wawra.compass.presentation.compass
 
+import android.annotation.SuppressLint
 import android.content.Context.SENSOR_SERVICE
 import android.hardware.Sensor
 import android.hardware.Sensor.TYPE_ACCELEROMETER
@@ -153,6 +154,7 @@ class CompassFragment : BaseFragment(), SensorEventListener, TargetDialogListene
         event?.let { viewModel.handleSensorEvent(it) }
     }
 
+    @SuppressLint("MissingPermission", "checked before function called")
     private fun getLocations() {
         context?.let {
             val locationRequest = LocationRequest().apply {
